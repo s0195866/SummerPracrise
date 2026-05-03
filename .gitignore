@@ -1,0 +1,39 @@
+# Byte-compiled / оптимизированные файлы Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Виртуальное окружение
+venv/
+env/
+.env
+.venv
+
+# Переменные окружения (содержит пароли!)
+.env
+.env.local
+
+# Файлы uv
+uv.lock
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Docker
+pgdata/
+
+# Базы данных SQLite (если используешь локально)
+*.sqlite3
+*.db
+
+# Логи
+*.log
+
+# Операционные системы
+.DS_Store
+Thumbs.db
+
+.python-version
