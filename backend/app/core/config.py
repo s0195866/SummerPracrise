@@ -1,7 +1,7 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pathlib import Path
 
-root_dir = Path(__file__).resolve().parent.parent.parent
+root_dir = Path(__file__).resolve().parent.parent.parent.parent
 
 
 class Settings(BaseSettings):
@@ -21,11 +21,19 @@ class Settings(BaseSettings):
             f"{self.DB_PORT}/{self.DB_NAME}"
         )
     
+    APP_PORT: str
+    APP_HOST: str
+
     model_config = SettingsConfigDict(env_file=f'{root_dir}/.env')
 
 
 
 
-settings = Settings()
 
+
+
+
+
+
+settings = Settings()
 

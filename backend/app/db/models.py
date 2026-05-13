@@ -3,7 +3,11 @@ from typing import List
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import String, Numeric, Boolean, DateTime, Date, ForeignKey, Text, Index
 from datetime import datetime
-from db.database import Base
+from sqlalchemy.orm import DeclarativeBase
+from app.db.database import engine
+
+class Base(DeclarativeBase):
+    pass
 
 
 class AppUser(Base):
@@ -92,5 +96,10 @@ class PasswordResetToken(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey("app_user.user_id", ondelete="CASCADE"), nullable=False)
     token: Mapped[str] = mapped_column(String(255), unique=True, nullable=False, index=True)
     expires_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
-
     user: Mapped["AppUser"] = relationship(back_populates="reset_tokens")
+
+
+async def create_tables():
+    async with engine.connect() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+        await conn.commit()
