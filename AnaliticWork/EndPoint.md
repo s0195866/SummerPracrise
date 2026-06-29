@@ -1,53 +1,48 @@
-Регистрация клиента:
-
+##### Регистрация клиента:
 POST /api/auth/register
 
 {
   "fullName": "Иван Иванов",
   "phone": "+79991234567",
-  "email": "ivan@mail.ru",
+  "email": "ivan@mail.r",
   "password": "123456"
 }
 
-Авторизация
+##### Авторизация
 POST /api/auth/login
 {
-  "email": "ivan@mail.ru",
+  "email": "ivan@mail.r",
   "password": "123456"
 }
 
-Выход из системы
+##### Выход из системы
 POST /api/auth/logout
 
-Получить профиль
+##### Получить профиль
 GET /api/customers/me
 
-Изменить профиль
+##### Изменить профиль
 PUT /api/customers/me
 
 {
   "fullName": "Иван Иванов",
   "phone": "+79991234567",
-  "email": "new@mail.ru"
+  "email": "new@mail.r"
 }
 
-История покупок
+##### История покупок
 GET /api/customers/me/orders
 
-Получить каталог товаров
+##### Получить каталог товаров
 GET /api/products
 
-GET /api/products?name=телефон
-GET /api/products?sort=price
-GET /api/products?minPrice=1000&maxPrice=5000
-
-Получить товар
+##### Получить товар
 GET /api/products/{productId}
 
-Добавить товар
+##### Добавить товар
 POST /api/products
-
 Роль: Администратор
+
 {
   "name": "Ноутбук",
   "price": 50000,
@@ -56,16 +51,16 @@ POST /api/products
   "stock": 15
 }
 
-Редактировать товар
+##### Редактировать товар
 PUT /api/products/{productId}
 
-Удалить товар
+##### Удалить товар
 DELETE /api/products/{productId}
 
-Получить корзину
+##### Получить корзину
 GET /api/cart
 
-Добавить товар
+##### Добавить товар
 POST /api/cart/items
 
 {
@@ -73,17 +68,17 @@ POST /api/cart/items
   "quantity": 2
 }
 
-Изменить количество
+##### Изменить количество
 PUT /api/cart/items/{itemId}
 
 {
   "quantity": 3
 }
 
-Удалить товар из корзины
+##### Удалить товар из корзины
 DELETE /api/cart/items/{itemId}
 
-Создать заказ
+##### Создать заказ
 POST /api/orders
 
 {
@@ -92,37 +87,37 @@ POST /api/orders
   "paymentMethod": "Карта"
 }
 
-Получить свои заказы
+##### Получить свои заказы
 GET /api/orders
 
-Получить заказ
+##### Получить заказ
 GET /api/orders/{orderId}
 
-Отменить заказ
+##### Отменить заказ
 PUT /api/orders/{orderId}/cancel
 
-Изменить статус заказа
+##### Изменить статус заказа
 PUT /api/orders/{orderId}/status
 
 {
   "status": "DELIVERING"
 }
 
-Получить данные доставки
+##### Получить данные доставки
 GET /api/deliveries/{deliveryId}
 
-Создать доставку
+##### Создать доставку
 Роль:Менеджер
 POST /api/deliveries
 
-Изменить статус доставки
+##### Изменить статус доставки
 PUT /api/deliveries/{deliveryId}
 
 {
   "status": "DELIVERED"
 }
 
-Создать оплату
+##### Создать оплату
 POST /api/payments
 
 {
@@ -130,16 +125,16 @@ POST /api/payments
   "paymentMethod": "CARD"
 }
 
-Получить информацию об оплате
+##### Получить информацию об оплате
 GET /api/payments/{paymentId}
 
-Изменить статус оплаты
+##### Изменить статус оплаты
 PUT /api/payments/{paymentId}
 
-Получить отзывы товара
+##### Получить отзывы товара
 GET /api/products/{productId}/reviews
 
-Оставить отзыв
+##### Оставить отзыв
 POST /api/products/{productId}/reviews
 
 {
@@ -147,34 +142,36 @@ POST /api/products/{productId}/reviews
   "text": "Отличный товар"
 }
 
-Удалить отзыв
+##### Удалить отзыв
 Роль:Администратор
 DELETE /api/reviews/{reviewId}
 
-Получить список продаж
+##### Получить список продаж
 Роль:Менеджер
 GET /api/sales
 
-Получить информацию о продаже
+##### Получить информацию о продаже
 GET /api/sales/{saleId}
 
-Получить список клиентов
+##### Получить список клиентов
 GET /api/customers
 
-Получить клиента
+##### Получить клиента
 GET /api/customers/{customerId}
 
-Получить пользователей
+##### Получить пользователей
 Роль:Администратор
 GET /api/admin/users
 
-Изменить роль пользователя
+##### Изменить роль пользователя
 Роль:Администратор
 PUT /api/admin/users/{userId}/role
 
-Получить статистику
+##### Получить статистику
 Роль:Администратор
 GET /api/admin/statistics
+
+#####
 
 | Функция                   | Гость | Клиент | Менеджер | Администратор |
 | ------------------------- | ----- | ------ | -------- | ------------- |
