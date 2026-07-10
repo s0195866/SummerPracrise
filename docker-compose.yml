@@ -21,24 +21,29 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    env_file:
+      - .env
     environment:
       DB_HOST: db
       DB_PORT: 5432
-      DB_NAME: ${DB_NAME:-summer_practice}
-      DB_USER: ${DB_USER:-postgres}
-      DB_PASSWORD: ${DB_PASSWORD:-postgres}
-      JWT_SECRET: ${JWT_SECRET:-summer-practice-secret-change-me}
-      DEBUG: ${DEBUG:-false}
-      SEED_DB: ${SEED_DB:-false}
+      SEED_DB: ${SEED_DB:-true}
     ports:
       - "8000:8000"
     depends_on:
       db:
         condition: service_healthy
     restart: unless-stopped
-    # При первом запуске можно раскомментировать SEED_DB=true в .env,
-    # чтобы автоматически заполнить БД тестовыми данными.
-    # Таблицы создаются автоматически при старте (init_db в main.py).
+
+  frontend:
+    container_name: shop-frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
 
 volumes:
   pgdata:
