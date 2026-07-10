@@ -37,3 +37,6 @@ pgdata/
 Thumbs.db
 
 .python-version
+
+# Node
+node_modules/
