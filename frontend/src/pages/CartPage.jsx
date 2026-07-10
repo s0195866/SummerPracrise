@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { cartApi, ordersApi, type CartOut } from '../api'
+import { cartApi, ordersApi } from '../api'
 import { useAuth } from '../context/AuthContext'
 
 export default function CartPage() {
   const { isAuthenticated } = useAuth()
   const navigate = useNavigate()
-  const [cart, setCart] = useState<CartOut | null>(null)
+  const [cart, setCart] = useState(null)
   const [loading, setLoading] = useState(true)
   const [orderForm, setOrderForm] = useState({ delivery_address: '', delivery_method: 'Курьер', payment_method: 'Карта' })
   const [ordering, setOrdering] = useState(false)
@@ -32,7 +32,7 @@ export default function CartPage() {
     }
   }
 
-  const handleUpdateQuantity = async (itemId: number, quantity: number) => {
+  const handleUpdateQuantity = async (itemId, quantity) => {
     try {
       const data = await cartApi.updateItem(itemId, quantity)
       setCart(data)
@@ -41,7 +41,7 @@ export default function CartPage() {
     }
   }
 
-  const handleRemoveItem = async (itemId: number) => {
+  const handleRemoveItem = async (itemId) => {
     try {
       const data = await cartApi.deleteItem(itemId)
       setCart(data)
@@ -50,7 +50,7 @@ export default function CartPage() {
     }
   }
 
-  const handleCreateOrder = async (e: React.FormEvent) => {
+  const handleCreateOrder = async (e) => {
     e.preventDefault()
     setOrdering(true)
     setOrderMessage('')
@@ -249,7 +249,7 @@ export default function CartPage() {
   )
 }
 
-const inputStyle: React.CSSProperties = {
+const inputStyle = {
   width: '100%',
   height: 44,
   padding: '0 12px',

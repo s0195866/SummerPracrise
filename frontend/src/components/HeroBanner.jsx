@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 const SLIDES = [
   {
-    title: 'Техника, которая\nдвижет вперёд',
+    title: 'Мы выбираем лучшее',
     subtitle: 'Современные устройства для работы, развлечений и повседневной жизни.',
     cta: 'Перейти в каталог',
     image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=700&h=470&fit=crop&auto=format',
@@ -146,7 +146,7 @@ export default function HeroBanner() {
   )
 }
 
-function CtaButton({ label }: { label: string }) {
+function CtaButton({ label }) {
   const [hovered, setHovered] = useState(false)
   return (
     <button
@@ -172,7 +172,7 @@ function CtaButton({ label }: { label: string }) {
   )
 }
 
-function NavButton({ direction, onClick }: { direction: 'prev' | 'next'; onClick: () => void }) {
+function NavButton({ direction, onClick }) {
   const [hovered, setHovered] = useState(false)
   return (
     <button

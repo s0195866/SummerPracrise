@@ -158,7 +158,7 @@ export default function Footer() {
   )
 }
 
-function FooterLink({ label }: { label: string }) {
+function FooterLink({ label }) {
   const [hovered, setHovered] = useState(false)
   return (
     <a
@@ -178,7 +178,7 @@ function FooterLink({ label }: { label: string }) {
   )
 }
 
-function SocialIcon({ children, label }: { children: React.ReactNode; label: string }) {
+function SocialIcon({ children, label }) {
   const [hovered, setHovered] = useState(false)
   return (
     <button
@@ -204,7 +204,7 @@ function SocialIcon({ children, label }: { children: React.ReactNode; label: str
   )
 }
 
-function ContactItem({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) {
+function ContactItem({ icon, children }) {
   return (
     <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
       <div style={{ color: '#0067B8', marginTop: 2, flexShrink: 0 }}>{icon}</div>

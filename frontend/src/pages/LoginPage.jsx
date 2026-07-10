@@ -11,7 +11,7 @@ export default function LoginPage() {
   const navigate = useNavigate()
   const { login } = useAuth()
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
     setLoading(true)

@@ -16,11 +16,11 @@ export default function RegisterPage() {
   const navigate = useNavigate()
   const { login } = useAuth()
 
-  const handleChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (field) => (e) => {
     setForm(prev => ({ ...prev, [field]: e.target.value }))
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
     setLoading(true)
@@ -161,7 +161,7 @@ export default function RegisterPage() {
   )
 }
 
-const inputStyle: React.CSSProperties = {
+const inputStyle = {
   width: '100%',
   height: 48,
   padding: '0 16px',

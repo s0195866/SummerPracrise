@@ -72,7 +72,7 @@ function SeeAllLink() {
   )
 }
 
-function ArticleCard({ article }: { article: (typeof ARTICLES)[0] }) {
+function ArticleCard({ article }) {
   const [hovered, setHovered] = useState(false)
 
   return (

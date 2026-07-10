@@ -1,21 +1,11 @@
-import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react'
-import { authApi, type ClientOut } from '../api'
+import { createContext, useContext, useState, useEffect, useCallback } from 'react'
+import { authApi } from '../api'
 
-interface AuthContextType {
-  client: ClientOut | null
-  token: string | null
-  isAuthenticated: boolean
-  isLoading: boolean
-  login: (token: string) => void
-  logout: () => void
-  refreshUser: () => Promise<void>
-}
+const AuthContext = createContext(null)
 
-const AuthContext = createContext<AuthContextType | null>(null)
-
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [client, setClient] = useState<ClientOut | null>(null)
-  const [token, setToken] = useState<string | null>(() => localStorage.getItem('access_token'))
+export function AuthProvider({ children }) {
+  const [client, setClient] = useState(null)
+  const [token, setToken] = useState(() => localStorage.getItem('access_token'))
   const [isLoading, setIsLoading] = useState(true)
 
   const refreshUser = useCallback(async () => {
@@ -30,7 +20,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  const login = useCallback((newToken: string) => {
+  const login = useCallback((newToken) => {
     localStorage.setItem('access_token', newToken)
     setToken(newToken)
   }, [])

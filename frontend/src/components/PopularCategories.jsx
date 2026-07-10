@@ -53,7 +53,7 @@ export default function PopularCategories() {
   )
 }
 
-function SectionHeader({ title }: { title: string }) {
+function SectionHeader({ title }) {
   const [hovered, setHovered] = useState(false)
   return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -91,17 +91,7 @@ function SectionHeader({ title }: { title: string }) {
   )
 }
 
-function CategoryCard({
-  name,
-  from,
-  image,
-  alt,
-}: {
-  name: string
-  from: string
-  image: string
-  alt: string
-}) {
+function CategoryCard({ name, from, image, alt }) {
   const [hovered, setHovered] = useState(false)
   return (
     <div

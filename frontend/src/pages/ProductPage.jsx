@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { productsApi, cartApi, reviewsApi, type ProductOut, type ReviewOut } from '../api'
+import { productsApi, cartApi, reviewsApi } from '../api'
 import { useAuth } from '../context/AuthContext'
 
 export default function ProductPage() {
-  const { id } = useParams<{ id: string }>()
+  const { id } = useParams()
   const navigate = useNavigate()
   const { isAuthenticated } = useAuth()
-  const [product, setProduct] = useState<ProductOut | null>(null)
-  const [reviews, setReviews] = useState<ReviewOut[]>([])
+  const [product, setProduct] = useState(null)
+  const [reviews, setReviews] = useState([])
   const [loading, setLoading] = useState(true)
   const [quantity, setQuantity] = useState(1)
   const [addingToCart, setAddingToCart] = useState(false)
@@ -51,7 +51,7 @@ export default function ProductPage() {
     }
   }
 
-  const handleReviewSubmit = async (e: React.FormEvent) => {
+  const handleReviewSubmit = async (e) => {
     e.preventDefault()
     if (!product) return
     setReviewError('')

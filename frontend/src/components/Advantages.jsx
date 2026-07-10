@@ -40,15 +40,7 @@ export default function Advantages() {
   )
 }
 
-function AdvantageCard({
-  icon,
-  title,
-  desc,
-}: {
-  icon: React.ReactNode
-  title: string
-  desc: string
-}) {
+function AdvantageCard({ icon, title, desc }) {
   const [hovered, setHovered] = useState(false)
   return (
     <div

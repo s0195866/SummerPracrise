@@ -47,18 +47,7 @@ export default function Header() {
       >
         {/* Logo */}
         <Link to="/" style={{ textDecoration: 'none', flexShrink: 0, display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span
-            style={{
-              fontSize: 28,
-              fontWeight: 700,
-              color: '#0067B8',
-              fontFamily: 'Inter, sans-serif',
-              letterSpacing: '-1px',
-              lineHeight: 1,
-            }}
-          >
-            ST
-          </span>
+          <img src="/favicon.svg" alt="ST" style={{ width: 40, height: 40, flexShrink: 0 }} />
           <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
             <span style={{ fontSize: 15, fontWeight: 700, color: '#1B1F24', lineHeight: 1.1, letterSpacing: '0.5px' }}>
               SIGMA-TECH
@@ -188,7 +177,7 @@ function SearchBar() {
   )
 }
 
-function NavAction({ icon, label }: { icon: React.ReactNode; label: string }) {
+function NavAction({ icon, label }) {
   const [hovered, setHovered] = useState(false)
   return (
     <button
@@ -216,7 +205,7 @@ function NavAction({ icon, label }: { icon: React.ReactNode; label: string }) {
   )
 }
 
-function CartAction({ count }: { count: number }) {
+function CartAction({ count }) {
   const [hovered, setHovered] = useState(false)
   return (
     <button

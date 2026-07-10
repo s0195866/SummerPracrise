@@ -151,20 +151,10 @@ function SeeAllLink() {
   )
 }
 
-function CarouselNav({
-  canPrev,
-  canNext,
-  onPrev,
-  onNext,
-}: {
-  canPrev: boolean
-  canNext: boolean
-  onPrev: () => void
-  onNext: () => void
-}) {
+function CarouselNav({ canPrev, canNext, onPrev, onNext }) {
   return (
     <div style={{ display: 'flex', gap: 8 }}>
-      {(['prev', 'next'] as const).map((dir) => {
+      {(['prev', 'next']).map((dir) => {
         const can = dir === 'prev' ? canPrev : canNext
         const [hov, setHov] = useState(false)
         return (
@@ -204,7 +194,7 @@ function CarouselNav({
   )
 }
 
-function ProductCard({ product }: { product: (typeof PRODUCTS)[0] }) {
+function ProductCard({ product }) {
   const [hovered, setHovered] = useState(false)
   const [cartHovered, setCartHovered] = useState(false)
 

@@ -48,15 +48,7 @@ export default function CategoryMenu() {
   )
 }
 
-function CategoryItem({
-  label,
-  active,
-  onClick,
-}: {
-  label: string
-  active: boolean
-  onClick: () => void
-}) {
+function CategoryItem({ label, active, onClick }) {
   const [hovered, setHovered] = useState(false)
   const highlighted = active || hovered
 

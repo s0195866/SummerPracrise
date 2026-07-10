@@ -58,7 +58,7 @@ function SeeAllLink() {
   )
 }
 
-function BrandLogo({ name }: { name: string }) {
+function BrandLogo({ name }) {
   const [hovered, setHovered] = useState(false)
   return (
     <div

@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { productsApi, type ProductOut } from '../api'
+import { productsApi } from '../api'
 
 export default function CatalogPage() {
-  const [products, setProducts] = useState<ProductOut[]>([])
+  const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
 
@@ -56,7 +56,7 @@ export default function CatalogPage() {
   )
 }
 
-function ProductCard({ product }: { product: ProductOut }) {
+function ProductCard({ product }) {
   const [hovered, setHovered] = useState(false)
 
   return (

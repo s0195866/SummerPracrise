@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { ordersApi, type OrderOut } from '../api'
+import { ordersApi } from '../api'
 import { useAuth } from '../context/AuthContext'
 
-const STATUS_LABELS: Record<string, string> = {
+const STATUS_LABELS = {
   new: 'Новый',
   processing: 'В обработке',
   shipped: 'Отправлен',
@@ -11,7 +11,7 @@ const STATUS_LABELS: Record<string, string> = {
   cancelled: 'Отменён',
 }
 
-const STATUS_COLORS: Record<string, string> = {
+const STATUS_COLORS = {
   new: '#0067B8',
   processing: '#F59E0B',
   shipped: '#8B5CF6',
@@ -20,10 +20,10 @@ const STATUS_COLORS: Record<string, string> = {
 }
 
 export default function OrderDetailPage() {
-  const { id } = useParams<{ id: string }>()
+  const { id } = useParams()
   const navigate = useNavigate()
   const { isAuthenticated } = useAuth()
-  const [order, setOrder] = useState<OrderOut | null>(null)
+  const [order, setOrder] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {

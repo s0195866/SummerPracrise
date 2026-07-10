@@ -26,7 +26,7 @@ export default function ProfilePage() {
     }
   }, [isAuthenticated, client])
 
-  const handleSave = async (e: React.FormEvent) => {
+  const handleSave = async (e) => {
     e.preventDefault()
     setSaving(true)
     setMessage('')
@@ -240,7 +240,7 @@ export default function ProfilePage() {
   )
 }
 
-const inputStyle: React.CSSProperties = {
+const inputStyle = {
   width: '100%',
   height: 44,
   padding: '0 12px',
