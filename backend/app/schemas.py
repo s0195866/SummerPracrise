@@ -73,6 +73,8 @@ class ProductBase(BaseModel):
     unit: Literal["шт", "кг", "л"]
     description: Optional[str] = Field(default=None, max_length=2000)
     stock_quantity: Decimal = Field(default=Decimal("0"), ge=0)
+    category: Optional[str] = Field(default=None, max_length=100)
+    brand: Optional[str] = Field(default=None, max_length=100)
 
 
 class ProductCreate(ProductBase):
@@ -85,6 +87,8 @@ class ProductUpdate(BaseModel):
     unit: Optional[Literal["шт", "кг", "л"]] = None
     description: Optional[str] = Field(default=None, max_length=2000)
     stock_quantity: Optional[Decimal] = Field(default=None, ge=0)
+    category: Optional[str] = Field(default=None, max_length=100)
+    brand: Optional[str] = Field(default=None, max_length=100)
 
 
 class ProductOut(ProductBase):

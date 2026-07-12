@@ -17,6 +17,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api import ALL_ROUTERS
 from app.config import settings
 from app.database import init_db
+from app.seed import seed
 
 logger = logging.getLogger(__name__)
 
@@ -33,6 +34,10 @@ async def lifespan(_: FastAPI):
     await init_db()
     if settings.debug:
         logger.warning("DEBUG=True: таблицы будут пересозданы при каждом старте.")
+    if settings.seed_db:
+        logger.info("SEED_DB=true: заполняю БД тестовыми данными...")
+        await seed()
+        logger.info("Тестовые данные добавлены.")
     logger.info("Приложение запущено: %s", settings.app_name)
     yield
     logger.info("Приложение останавливается...")

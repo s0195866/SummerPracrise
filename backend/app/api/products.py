@@ -19,11 +19,19 @@ async def list_products(
     limit: int = 100,
     offset: int = 0,
     search: str | None = None,
+    category: str | None = None,
+    brand: str | None = None,
 ) -> list[Product]:
-    """Каталог товаров. Доступен всем (включая гостей)."""
+    """Каталог товаров. Доступен всем (включая гостей).
+    Поддерживает фильтрацию по поиску, категории и бренду.
+    """
     stmt = select(Product).order_by(Product.product_id)
     if search:
         stmt = stmt.where(Product.name.ilike(f"%{search}%"))
+    if category:
+        stmt = stmt.where(Product.category.ilike(f"%{category}%"))
+    if brand:
+        stmt = stmt.where(Product.brand.ilike(f"%{brand}%"))
     stmt = stmt.limit(limit).offset(offset)
     result = await db.execute(stmt)
     return list(result.scalars().all())
