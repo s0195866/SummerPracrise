@@ -91,6 +91,8 @@ class Product(Base):
     unit: Mapped[str] = mapped_column(String(10), nullable=False)  # 'шт', 'кг', 'л'
     description: Mapped[Optional[str]] = mapped_column(String(2000))
     stock_quantity: Mapped[Decimal] = mapped_column(Numeric(12, 2), default=0, nullable=False)
+    category: Mapped[Optional[str]] = mapped_column(String(100), default=None)
+    brand: Mapped[Optional[str]] = mapped_column(String(100), default=None)
 
     # --- Связи ---
     order_items: Mapped[list["OrderItem"]] = relationship(back_populates="product")

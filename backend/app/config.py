@@ -7,9 +7,18 @@
 from __future__ import annotations
 
 from functools import lru_cache
+from pathlib import Path
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+# Ищем .env в корне проекта (родительская папка от backend/)
+# или в текущей папке (для Docker, где env передаётся через env_file)
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent  # backend/app/ -> backend/ -> корень
+_ENV_FILE = _PROJECT_ROOT / ".env"
+if not _ENV_FILE.exists():
+    _ENV_FILE = Path(".env")  # fallback на текущую директорию
 
 
 class Settings(BaseSettings):
@@ -19,7 +28,7 @@ class Settings(BaseSettings):
     """
 
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=str(_ENV_FILE),
         env_file_encoding="utf-8",
         case_sensitive=False,
         extra="ignore",
@@ -46,6 +55,9 @@ class Settings(BaseSettings):
     # --- Бизнес-правила ---
     regular_customer_threshold: float = 5000.0
     regular_customer_discount: float = 0.02  # 2%
+
+    # --- Флаги запуска ---
+    seed_db: bool = Field(default=False, description="Заполнить БД тестовыми данными при старте")
 
     @property
     def database_url(self) -> str:

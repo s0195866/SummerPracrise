@@ -14,7 +14,7 @@ dependencies = [
     "email-validator>=2.2",
     "python-jose[cryptography]>=3.3",
     "passlib[bcrypt]>=1.7.4",
-    "bcrypt>=4.2,<4.3",
+    "bcrypt>=4.0,<4.1",
     "psycopg2-binary>=2.9",  # для синхронных скриптов обслуживания
 ]
 

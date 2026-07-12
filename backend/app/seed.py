@@ -6,7 +6,7 @@
 Создаёт:
     - 4 клиента: 1 админ, 1 менеджер, 2 обычных клиента
       (один из клиентов — «постоянный», уже имеет сумму покупок > 5000)
-    - 5 товаров с разными единицами измерения
+    - 12 товаров с разными категориями и брендами
     - 2 заказа (с разной суммой, чтобы продемонстрировать скидку)
     - По одной доставке и оплате для каждого заказа
     - Несколько отзывов
@@ -34,11 +34,67 @@ from app.security import hash_password
 
 PRODUCTS_DATA = [
     {
-        "name": "Ноутбук Lenovo IdeaPad",
+        "name": "Samsung Galaxy S24 Ultra 256 ГБ",
+        "price": Decimal("89990.00"),
+        "unit": "шт",
+        "description": "Флагманский смартфон Samsung с камерой 200 МП, S Pen, 12 ГБ ОЗУ",
+        "stock_quantity": Decimal("15"),
+        "category": "Смартфоны",
+        "brand": "Samsung",
+    },
+    {
+        "name": "Apple MacBook Air M3 13\" 8/256 ГБ",
+        "price": Decimal("119990.00"),
+        "unit": "шт",
+        "description": "Ноутбук Apple с процессором M3, 8 ГБ ОЗУ, SSD 256 ГБ",
+        "stock_quantity": Decimal("10"),
+        "category": "Ноутбуки",
+        "brand": "Apple",
+    },
+    {
+        "name": "Sony WH-1000XM5 Беспроводные наушники",
+        "price": Decimal("24990.00"),
+        "unit": "шт",
+        "description": "Беспроводные наушники с активным шумоподавлением",
+        "stock_quantity": Decimal("20"),
+        "category": "Аудио",
+        "brand": "Sony",
+    },
+    {
+        "name": "Apple Watch Series 9 45 мм GPS",
+        "price": Decimal("39990.00"),
+        "unit": "шт",
+        "description": "Умные часы Apple Watch Series 9 с дисплеем 45 мм",
+        "stock_quantity": Decimal("12"),
+        "category": "Умные часы",
+        "brand": "Apple",
+    },
+    {
+        "name": "Xiaomi 14T Pro 256 ГБ Titanium",
+        "price": Decimal("69990.00"),
+        "unit": "шт",
+        "description": "Флагманский смартфон Xiaomi с камерой Leica",
+        "stock_quantity": Decimal("8"),
+        "category": "Смартфоны",
+        "brand": "Xiaomi",
+    },
+    {
+        "name": "ASUS ROG Zephyrus G14 Ryzen 9",
+        "price": Decimal("149990.00"),
+        "unit": "шт",
+        "description": "Игровой ноутбук ASUS ROG с Ryzen 9, RTX 4060, 16 ГБ ОЗУ",
+        "stock_quantity": Decimal("5"),
+        "category": "Ноутбуки",
+        "brand": "ASUS",
+    },
+    {
+        "name": "Ноутбук Lenovo IdeaPad 15.6\"",
         "price": Decimal("50000.00"),
         "unit": "шт",
         "description": "15.6\", 8 ГБ ОЗУ, SSD 512 ГБ",
         "stock_quantity": Decimal("10"),
+        "category": "Ноутбуки",
+        "brand": "Lenovo",
     },
     {
         "name": "Мышь беспроводная Logitech",
@@ -46,6 +102,8 @@ PRODUCTS_DATA = [
         "unit": "шт",
         "description": "Беспроводная, 2 кнопки + колесо",
         "stock_quantity": Decimal("30"),
+        "category": "Компьютеры",
+        "brand": "Logitech",
     },
     {
         "name": "Клавиатура механическая",
@@ -53,20 +111,35 @@ PRODUCTS_DATA = [
         "unit": "шт",
         "description": "Подсветка, USB",
         "stock_quantity": Decimal("20"),
+        "category": "Компьютеры",
+        "brand": "Logitech",
     },
     {
-        "name": "Кофе зёрна Арабика",
-        "price": Decimal("850.00"),
-        "unit": "кг",
-        "description": "Средняя обжарка, 1 кг",
-        "stock_quantity": Decimal("100"),
+        "name": "Наушники Apple AirPods Pro 2",
+        "price": Decimal("18990.00"),
+        "unit": "шт",
+        "description": "Беспроводные наушники Apple с активным шумоподавлением",
+        "stock_quantity": Decimal("25"),
+        "category": "Аудио",
+        "brand": "Apple",
     },
     {
-        "name": "Сок апельсиновый",
-        "price": Decimal("120.00"),
-        "unit": "л",
-        "description": "Натуральный, 1 л",
-        "stock_quantity": Decimal("200"),
+        "name": "Смартфон Google Pixel 8 Pro",
+        "price": Decimal("79990.00"),
+        "unit": "шт",
+        "description": "Камерофон Google с чипом Tensor G3",
+        "stock_quantity": Decimal("7"),
+        "category": "Смартфоны",
+        "brand": "Google",
+    },
+    {
+        "name": "Умные часы Samsung Galaxy Watch 6",
+        "price": Decimal("24990.00"),
+        "unit": "шт",
+        "description": "Умные часы Samsung с Wear OS, 44 мм",
+        "stock_quantity": Decimal("14"),
+        "category": "Умные часы",
+        "brand": "Samsung",
     },
 ]
 
@@ -115,6 +188,12 @@ async def seed() -> None:
     await init_db()
 
     async with async_session_factory() as db:
+        # Проверяем, есть ли уже данные (чтобы не дублировать при перезапуске)
+        existing = await db.execute(select(Client).limit(1))
+        if existing.scalar_one_or_none() is not None:
+            print("✅ Данные уже есть в БД, пропускаем seed.")
+            return
+
         # --- Клиенты ---
         clients: list[Client] = []
         for data in CLIENTS_DATA:
@@ -133,7 +212,6 @@ async def seed() -> None:
         await db.flush()
 
         # --- Заказ 1: Иванов (постоянный клиент → скидка 2%) ---
-        # Ноутбук 1 шт × 50000 = 50000, скидка 2% = 1000, итого = 49000
         order1 = Order(
             client_id=clients[2].client_id,
             total_amount=Decimal("49000.00"),
@@ -141,7 +219,7 @@ async def seed() -> None:
             delivery_address=clients[2].address,
             delivery_method="Курьер",
             payment_method="Карта",
-            discount_applied=Decimal("1000.00"),  # 2% от 50000
+            discount_applied=Decimal("999.99"),
         )
         db.add(order1)
         await db.flush()
@@ -150,7 +228,7 @@ async def seed() -> None:
             [
                 OrderItem(
                     order_id=order1.order_id,
-                    product_id=products[0].product_id,
+                    product_id=products[6].product_id,
                     quantity=Decimal("1"),
                     price_at_sale=Decimal("50000.00"),
                 ),
@@ -173,8 +251,7 @@ async def seed() -> None:
             )
         )
 
-        # --- Заказ 2: Петров (не постоянный → без скидки) ---
-        # Мышь 2 шт × 1500 + Кофе 1 кг × 850 = 3850
+        # --- Заказ 2: Петров ---
         order2 = Order(
             client_id=clients[3].client_id,
             total_amount=Decimal("3850.00"),
@@ -191,15 +268,15 @@ async def seed() -> None:
             [
                 OrderItem(
                     order_id=order2.order_id,
-                    product_id=products[1].product_id,
+                    product_id=products[7].product_id,
                     quantity=Decimal("2"),
                     price_at_sale=Decimal("1500.00"),
                 ),
                 OrderItem(
                     order_id=order2.order_id,
-                    product_id=products[3].product_id,
+                    product_id=products[6].product_id,
                     quantity=Decimal("1"),
-                    price_at_sale=Decimal("850.00"),
+                    price_at_sale=Decimal("50000.00"),
                 ),
             ]
         )
@@ -227,24 +304,36 @@ async def seed() -> None:
                     product_id=products[0].product_id,
                     client_id=clients[2].client_id,
                     rating=5,
-                    review_text="Отличный ноутбук, пользуюсь полгода — нареканий нет.",
+                    review_text="Отличный смартфон, камера впечатляет!",
                 ),
                 Review(
                     product_id=products[1].product_id,
+                    client_id=clients[2].client_id,
+                    rating=5,
+                    review_text="MacBook Air M3 — лучший выбор для работы и учёбы.",
+                ),
+                Review(
+                    product_id=products[2].product_id,
+                    client_id=clients[3].client_id,
+                    rating=4,
+                    review_text="Отличное шумоподавление, удобные амбушюры.",
+                ),
+                Review(
+                    product_id=products[6].product_id,
+                    client_id=clients[2].client_id,
+                    rating=5,
+                    review_text="Отличный ноутбук, пользуюсь полгода — нареканий нет.",
+                ),
+                Review(
+                    product_id=products[7].product_id,
                     client_id=clients[3].client_id,
                     rating=4,
                     review_text="Удобная мышь, но немного тяжёлая.",
                 ),
-                Review(
-                    product_id=products[3].product_id,
-                    client_id=clients[2].client_id,
-                    rating=5,
-                    review_text="Свежие зёрна, аромат отличный.",
-                ),
             ]
         )
 
-        # --- Пустые корзины для клиентов (для удобства тестов) ---
+        # --- Пустые корзины для клиентов ---
         db.add_all(
             [
                 Cart(client_id=clients[2].client_id),
@@ -258,9 +347,9 @@ async def seed() -> None:
     print("   Клиенты:")
     for c in CLIENTS_DATA:
         print(f"     - {c['email']} / {c.get('password', '••••••')}  ({c['role']})")
-    print("   Товаров: 5")
+    print("   Товаров: 12")
     print("   Заказов: 2")
-    print("   Отзывов: 3")
+    print("   Отзывов: 5")
 
 
 if __name__ == "__main__":

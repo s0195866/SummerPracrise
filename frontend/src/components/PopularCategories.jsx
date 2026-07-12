@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const CATEGORIES = [
   {
@@ -34,6 +35,7 @@ const CATEGORIES = [
 ]
 
 export default function PopularCategories() {
+  const navigate = useNavigate()
   return (
     <section style={{ marginTop: 64 }}>
       <SectionHeader title="Популярные категории" />
@@ -55,6 +57,7 @@ export default function PopularCategories() {
 
 function SectionHeader({ title }) {
   const [hovered, setHovered] = useState(false)
+  const navigate = useNavigate()
   return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
       <h2
@@ -71,6 +74,7 @@ function SectionHeader({ title }) {
       </h2>
       <a
         href="#"
+        onClick={(e) => { e.preventDefault(); navigate('/catalog') }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         style={{
@@ -93,10 +97,12 @@ function SectionHeader({ title }) {
 
 function CategoryCard({ name, from, image, alt }) {
   const [hovered, setHovered] = useState(false)
+  const navigate = useNavigate()
   return (
     <div
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onClick={() => navigate(`/catalog?category=${encodeURIComponent(name)}`)}
       style={{
         backgroundColor: '#FFFFFF',
         border: `1px solid ${hovered ? '#C8D9EE' : '#E8EDF4'}`,

@@ -22,6 +22,8 @@ export const productsApi = {
     if (params?.limit) query.set('limit', String(params.limit))
     if (params?.offset) query.set('offset', String(params.offset))
     if (params?.search) query.set('search', params.search)
+    if (params?.category) query.set('category', params.category)
+    if (params?.brand) query.set('brand', params.brand)
     const qs = query.toString()
     return api.get(`/products${qs ? `?${qs}` : ''}`, { auth: false })
   },
@@ -58,9 +60,9 @@ export const ordersApi = {
 // ===================== REVIEWS =====================
 export const reviewsApi = {
   listByProduct: (productId) =>
-    api.get(`/reviews/product/${productId}`, { auth: false }),
+    api.get(`/products/${productId}/reviews`, { auth: false }),
   create: (productId, data) =>
-    api.post(`/reviews/product/${productId}`, data),
+    api.post(`/products/${productId}/reviews`, data),
   delete: (reviewId) => api.delete(`/reviews/${reviewId}`),
 }
 

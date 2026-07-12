@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { cartApi } from '../api'
@@ -17,11 +17,6 @@ export default function Header() {
       setCartCount(0)
     }
   }, [isAuthenticated])
-
-  const handleLogout = () => {
-    logout()
-    navigate('/')
-  }
 
   return (
     <header
@@ -47,7 +42,7 @@ export default function Header() {
       >
         {/* Logo */}
         <Link to="/" style={{ textDecoration: 'none', flexShrink: 0, display: 'flex', alignItems: 'center', gap: 10 }}>
-          <img src="/favicon.svg" alt="ST" style={{ width: 40, height: 40, flexShrink: 0 }} />
+          <img src="/favicon.svg" alt="ST" style={{ width: 45, height: 45, flexShrink: 0 }} />
           <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
             <span style={{ fontSize: 15, fontWeight: 700, color: '#1B1F24', lineHeight: 1.1, letterSpacing: '0.5px' }}>
               SIGMA-TECH
@@ -71,23 +66,8 @@ export default function Header() {
           {isAuthenticated && client ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
               <Link to="/profile" style={{ textDecoration: 'none' }}>
-                <NavAction icon={<UserIcon />} label={client.full_name.split(' ')[0]} />
+                <NavAction icon={<UserIcon />} label={getFirstName(client.full_name)} />
               </Link>
-              <button
-                onClick={handleLogout}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  color: '#DC2626',
-                  fontSize: 12,
-                  fontWeight: 500,
-                  fontFamily: 'Inter, sans-serif',
-                  padding: 0,
-                }}
-              >
-                Выйти
-              </button>
             </div>
           ) : (
             <Link to="/login" style={{ textDecoration: 'none' }}>
@@ -104,6 +84,16 @@ export default function Header() {
       </div>
     </header>
   )
+}
+
+function getFirstName(fullName) {
+  if (!fullName) return ''
+  const parts = fullName.trim().split(' ')
+  // Return the first name if there are at least 2 words, otherwise return the full name
+  if (parts.length >= 2) {
+    return parts[0]
+  }
+  return parts[0]
 }
 
 function CatalogButton() {
@@ -139,6 +129,25 @@ function CatalogButton() {
 
 function SearchBar() {
   const [focused, setFocused] = useState(false)
+  const [query, setQuery] = useState('')
+  const navigate = useNavigate()
+  const inputRef = useRef(null)
+
+  const handleSearch = () => {
+    const trimmed = query.trim()
+    if (trimmed) {
+      navigate(`/catalog?search=${encodeURIComponent(trimmed)}`)
+    } else {
+      navigate('/catalog')
+    }
+  }
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch()
+    }
+  }
+
   return (
     <div
       style={{
@@ -156,10 +165,14 @@ function SearchBar() {
       }}
     >
       <input
+        ref={inputRef}
         type="text"
         placeholder="Поиск по товарам..."
+        value={query}
+        onChange={e => setQuery(e.target.value)}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
+        onKeyDown={handleKeyDown}
         style={{
           flex: 1,
           border: 'none',
@@ -170,7 +183,10 @@ function SearchBar() {
           backgroundColor: 'transparent',
         }}
       />
-      <button style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: '#6C7685', display: 'flex' }}>
+      <button
+        onClick={handleSearch}
+        style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: '#6C7685', display: 'flex' }}
+      >
         <SearchIcon />
       </button>
     </div>

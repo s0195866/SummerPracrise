@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const PRODUCTS = [
   {
@@ -132,9 +133,11 @@ export default function PopularProducts() {
 
 function SeeAllLink() {
   const [hovered, setHovered] = useState(false)
+  const navigate = useNavigate()
   return (
     <a
       href="#"
+      onClick={(e) => { e.preventDefault(); navigate('/catalog') }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
@@ -197,11 +200,13 @@ function CarouselNav({ canPrev, canNext, onPrev, onNext }) {
 function ProductCard({ product }) {
   const [hovered, setHovered] = useState(false)
   const [cartHovered, setCartHovered] = useState(false)
+  const navigate = useNavigate()
 
   return (
     <div
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onClick={() => navigate(`/products/${product.id}`)}
       style={{
         backgroundColor: '#FFFFFF',
         border: `1px solid ${hovered ? '#C8D9EE' : '#E8EDF4'}`,
@@ -299,7 +304,7 @@ function ProductCard({ product }) {
           <button
             onMouseEnter={() => setCartHovered(true)}
             onMouseLeave={() => setCartHovered(false)}
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) => { e.stopPropagation(); navigate(`/products/${product.id}`) }}
             style={{
               width: 40,
               height: 40,

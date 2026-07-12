@@ -1,10 +1,12 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const SLIDES = [
   {
     title: 'Мы выбираем лучшее',
     subtitle: 'Современные устройства для работы, развлечений и повседневной жизни.',
     cta: 'Перейти в каталог',
+    link: '/catalog',
     image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=700&h=470&fit=crop&auto=format',
     imageAlt: 'MacBook Pro на рабочем столе',
   },
@@ -12,6 +14,7 @@ const SLIDES = [
     title: 'Смартфоны нового\nпоколения',
     subtitle: 'Флагманы и доступные модели от ведущих мировых брендов.',
     cta: 'Смотреть смартфоны',
+    link: '/catalog?category=Смартфоны',
     image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=700&h=470&fit=crop&auto=format',
     imageAlt: 'Смартфон на светлом фоне',
   },
@@ -19,6 +22,7 @@ const SLIDES = [
     title: 'Звук без\nкомпромиссов',
     subtitle: 'Беспроводные наушники и акустика для истинных ценителей качества.',
     cta: 'Смотреть аудио',
+    link: '/catalog?category=Аудио',
     image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=700&h=470&fit=crop&auto=format',
     imageAlt: 'Беспроводные наушники',
   },
@@ -84,7 +88,7 @@ export default function HeroBanner() {
           >
             {slide.subtitle}
           </p>
-          <CtaButton label={slide.cta} />
+          <CtaButton label={slide.cta} link={slide.link} />
         </div>
 
         {/* Right: image */}
@@ -146,12 +150,14 @@ export default function HeroBanner() {
   )
 }
 
-function CtaButton({ label }) {
+function CtaButton({ label, link }) {
   const [hovered, setHovered] = useState(false)
+  const navigate = useNavigate()
   return (
     <button
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onClick={() => navigate(link)}
       style={{
         width: 220,
         height: 56,

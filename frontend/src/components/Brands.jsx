@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const BRANDS = ['Apple', 'Samsung', 'Xiaomi', 'ASUS', 'Sony', 'Lenovo', 'Dell']
 
@@ -39,9 +40,11 @@ export default function Brands() {
 
 function SeeAllLink() {
   const [hovered, setHovered] = useState(false)
+  const navigate = useNavigate()
   return (
     <a
       href="#"
+      onClick={(e) => { e.preventDefault(); navigate('/catalog') }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
@@ -60,8 +63,10 @@ function SeeAllLink() {
 
 function BrandLogo({ name }) {
   const [hovered, setHovered] = useState(false)
+  const navigate = useNavigate()
   return (
     <div
+      onClick={() => navigate(`/catalog?brand=${encodeURIComponent(name)}`)}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{

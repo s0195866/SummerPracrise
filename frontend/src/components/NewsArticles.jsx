@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const ARTICLES = [
   {
@@ -53,9 +54,11 @@ export default function NewsArticles() {
 
 function SeeAllLink() {
   const [hovered, setHovered] = useState(false)
+  const navigate = useNavigate()
   return (
     <a
       href="#"
+      onClick={(e) => { e.preventDefault(); navigate('/articles/1') }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
@@ -74,9 +77,11 @@ function SeeAllLink() {
 
 function ArticleCard({ article }) {
   const [hovered, setHovered] = useState(false)
+  const navigate = useNavigate()
 
   return (
     <div
+      onClick={() => navigate(`/articles/${article.id}`)}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
@@ -131,17 +136,19 @@ function ArticleCard({ article }) {
         >
           {article.title}
         </h3>
-        <ReadMore />
+        <ReadMore articleId={article.id} />
       </div>
     </div>
   )
 }
 
-function ReadMore() {
+function ReadMore({ articleId }) {
   const [hovered, setHovered] = useState(false)
+  const navigate = useNavigate()
   return (
     <a
       href="#"
+      onClick={(e) => { e.preventDefault(); navigate(`/articles/${articleId}`) }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{

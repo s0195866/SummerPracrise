@@ -23,17 +23,7 @@ export default function Footer() {
           {/* Left: brand */}
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-              <span
-                style={{
-                  fontSize: 24,
-                  fontWeight: 700,
-                  color: '#0067B8',
-                  fontFamily: 'Inter, sans-serif',
-                  letterSpacing: '-1px',
-                }}
-              >
-                ST
-              </span>
+              <img src="/favicon.svg" alt="ST" style={{ width: 40, height: 40, flexShrink: 0 }} />
               <div>
                 <div style={{ fontSize: 14, fontWeight: 700, color: '#1B1F24', letterSpacing: '0.5px' }}>
                   SIGMA-TECH
