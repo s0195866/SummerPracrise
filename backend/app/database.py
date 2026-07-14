@@ -47,11 +47,47 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
             await session.close()
 
 
+async def _run_migrations(conn) -> None:
+    """Простые миграции: добавление новых колонок в существующие таблицы.
+
+    Используется вместо Alembic для учебного проекта.
+    При каждой миграции проверяем наличие колонки через information_schema.
+    """
+    # Миграция: is_blocked в client
+    await conn.execute(
+        __import__("sqlalchemy").text(
+            "DO $$ BEGIN "
+            "  IF NOT EXISTS ("
+            "    SELECT 1 FROM information_schema.columns "
+            "    WHERE table_name='client' AND column_name='is_blocked'"
+            "  ) THEN "
+            "    ALTER TABLE client ADD COLUMN is_blocked BOOLEAN NOT NULL DEFAULT FALSE; "
+            "  END IF; "
+            "END $$;"
+        )
+    )
+
+    # Миграция: photo в product
+    await conn.execute(
+        __import__("sqlalchemy").text(
+            "DO $$ BEGIN "
+            "  IF NOT EXISTS ("
+            "    SELECT 1 FROM information_schema.columns "
+            "    WHERE table_name='product' AND column_name='photo'"
+            "  ) THEN "
+            "    ALTER TABLE product ADD COLUMN photo VARCHAR(500) DEFAULT NULL; "
+            "  END IF; "
+            "END $$;"
+        )
+    )
+
+
 async def init_db() -> None:
-    """Создаёт все таблицы (используется при старте приложения).
+    """Создаёт все таблицы + применяет миграции (используется при старте приложения).
 
     В реальном проекте здесь должен быть Alembic, но для учебной задачи
-    достаточно `Base.metadata.create_all`.
+    достаточно Base.metadata.create_all + простые ALTER TABLE.
     """
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+        await _run_migrations(conn)

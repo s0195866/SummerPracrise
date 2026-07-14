@@ -57,6 +57,11 @@ async def login(payload: LoginRequest, db: AsyncSession = Depends(get_db)) -> To
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Неверный email или пароль",
         )
+    if client.is_blocked:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Аккаунт заблокирован. Обратитесь к администратору.",
+        )
     token = create_access_token(
         client.client_id, extra={"role": client.role, "email": client.email}
     )

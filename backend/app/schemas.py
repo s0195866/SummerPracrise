@@ -49,6 +49,7 @@ class ClientOut(BaseModel):
     address: Optional[str] = None
     reg_date: date
     role: str
+    is_blocked: bool = False
     total_purchases_amount: Decimal
     is_regular: bool = False
 
@@ -75,6 +76,7 @@ class ProductBase(BaseModel):
     stock_quantity: Decimal = Field(default=Decimal("0"), ge=0)
     category: Optional[str] = Field(default=None, max_length=100)
     brand: Optional[str] = Field(default=None, max_length=100)
+    photo: Optional[str] = Field(default=None, max_length=500)
 
 
 class ProductCreate(ProductBase):
@@ -89,6 +91,7 @@ class ProductUpdate(BaseModel):
     stock_quantity: Optional[Decimal] = Field(default=None, ge=0)
     category: Optional[str] = Field(default=None, max_length=100)
     brand: Optional[str] = Field(default=None, max_length=100)
+    photo: Optional[str] = Field(default=None, max_length=500)
 
 
 class ProductOut(ProductBase):
