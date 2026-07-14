@@ -94,6 +94,7 @@ class Product(Base):
     stock_quantity: Mapped[Decimal] = mapped_column(Numeric(12, 2), default=0, nullable=False)
     category: Mapped[Optional[str]] = mapped_column(String(100), default=None)
     brand: Mapped[Optional[str]] = mapped_column(String(100), default=None)
+    photo: Mapped[Optional[str]] = mapped_column(String(500), default=None)
 
     # --- Связи ---
     order_items: Mapped[list["OrderItem"]] = relationship(back_populates="product")
@@ -134,7 +135,7 @@ class Order(Base):
     delivery_method: Mapped[Optional[str]] = mapped_column(String(50))
     payment_method: Mapped[Optional[str]] = mapped_column(String(50))
     discount_applied: Mapped[Decimal] = mapped_column(
-        Numeric(5, 2), default=Decimal("0.00"), nullable=False
+        Numeric(12, 2), default=Decimal("0.00"), nullable=False
     )
 
     # --- Связи ---

@@ -67,6 +67,20 @@ async def _run_migrations(conn) -> None:
         )
     )
 
+    # Миграция: photo в product
+    await conn.execute(
+        __import__("sqlalchemy").text(
+            "DO $$ BEGIN "
+            "  IF NOT EXISTS ("
+            "    SELECT 1 FROM information_schema.columns "
+            "    WHERE table_name='product' AND column_name='photo'"
+            "  ) THEN "
+            "    ALTER TABLE product ADD COLUMN photo VARCHAR(500) DEFAULT NULL; "
+            "  END IF; "
+            "END $$;"
+        )
+    )
+
 
 async def init_db() -> None:
     """Создаёт все таблицы + применяет миграции (используется при старте приложения).

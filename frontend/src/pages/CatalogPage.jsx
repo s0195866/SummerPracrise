@@ -122,8 +122,13 @@ export default function CatalogPage() {
   )
 }
 
-// map DB product_id -> local photo path based on category position
+// Get product image: use uploaded photo if available, otherwise fallback to local mapping
 const getLocalProductImage = (product) => {
+  // If product has an uploaded photo, use it
+  if (product.photo) {
+    return product.photo
+  }
+
   const categoryMap = {
     'Смартфоны': [
       '/catalog_photo/smartphone/Xiaomi Redmi 15 256 ГБ черный.webp',
@@ -162,7 +167,7 @@ const getLocalProductImage = (product) => {
     ],
   }
   const images = categoryMap[product.category]
-  if (!images) return '/favicon.svg'
+  if (!images) return null // will show placeholder
   const idx = images.length > 0 ? (product.product_id - 1) % images.length : 0
   return images[Math.min(idx, images.length - 1)]
 }
@@ -215,17 +220,28 @@ function ProductCard({ product }) {
       }}
     >
       <div style={{ height: 180, backgroundColor: '#F5F8FC', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: 8 }}>
-        <img
-          src={imageUrl}
-          alt={product.name}
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'contain',
-            transform: hovered ? 'scale(1.03)' : 'scale(1)',
-            transition: 'transform 0.3s ease',
-          }}
-        />
+        {imageUrl ? (
+          <img
+            src={imageUrl}
+            alt={product.name}
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'contain',
+              transform: hovered ? 'scale(1.03)' : 'scale(1)',
+              transition: 'transform 0.3s ease',
+            }}
+          />
+        ) : (
+          <div style={{ textAlign: 'center', color: '#9CA3AF', fontFamily: 'Inter, sans-serif', fontSize: 13, padding: 16 }}>
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#D4DCE8" strokeWidth="1.5" style={{ marginBottom: 8 }}>
+              <rect x="3" y="3" width="18" height="18" rx="2" />
+              <circle cx="8.5" cy="8.5" r="1.5" />
+              <path d="M21 15l-5-5L5 21" />
+            </svg>
+            <div>фото еще не добавлено</div>
+          </div>
+        )}
       </div>
       <div style={{ padding: '12px 14px 14px' }}>
         <div style={{

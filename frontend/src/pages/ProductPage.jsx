@@ -3,8 +3,13 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { productsApi, cartApi, reviewsApi } from '../api'
 import { useAuth } from '../context/AuthContext'
 
-// map DB product_id -> local photo path based on category position
+// Get product image: use uploaded photo if available, otherwise fallback to local mapping
 const getLocalProductImage = (product) => {
+  // If product has an uploaded photo, use it
+  if (product.photo) {
+    return product.photo
+  }
+
   const categoryMap = {
     'Смартфоны': [
       '/catalog_photo/smartphone/Xiaomi Redmi 15 256 ГБ черный.webp',
@@ -43,7 +48,7 @@ const getLocalProductImage = (product) => {
     ],
   }
   const images = categoryMap[product.category]
-  if (!images) return '/favicon.svg'
+  if (!images) return null
   const idx = (product.product_id - 1) % images.length
   return images[Math.min(idx, images.length - 1)]
 }
@@ -137,11 +142,22 @@ export default function ProductPage() {
 
       <div style={{ display: 'flex', gap: 40, flexWrap: 'wrap' }}>
         <div style={{ flex: '0 0 400px', height: 400, backgroundColor: '#F5F8FC', borderRadius: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: 24 }}>
-          <img
-            src={imageUrl}
-            alt={product.name}
-            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-          />
+          {imageUrl ? (
+            <img
+              src={imageUrl}
+              alt={product.name}
+              style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+            />
+          ) : (
+            <div style={{ textAlign: 'center', color: '#9CA3AF', fontFamily: 'Inter, sans-serif', fontSize: 14, padding: 24 }}>
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#D4DCE8" strokeWidth="1.5" style={{ marginBottom: 12 }}>
+                <rect x="3" y="3" width="18" height="18" rx="2" />
+                <circle cx="8.5" cy="8.5" r="1.5" />
+                <path d="M21 15l-5-5L5 21" />
+              </svg>
+              <div>фото еще не добавлено</div>
+            </div>
+          )}
         </div>
 
         <div style={{ flex: 1, minWidth: 300 }}>

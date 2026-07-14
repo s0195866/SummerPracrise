@@ -96,3 +96,24 @@ export const adminApi = {
   blockUser: (userId) => api.put(`/admin/users/${userId}/block`),
   unblockUser: (userId) => api.put(`/admin/users/${userId}/unblock`),
 }
+
+// ===================== UPLOADS =====================
+export const uploadApi = {
+  upload: async (file) => {
+    const token = localStorage.getItem('access_token')
+    const formData = new FormData()
+    formData.append('file', file)
+    const response = await fetch('/api/upload', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+      body: formData,
+    })
+    if (!response.ok) {
+      const text = await response.text()
+      throw new Error(text || `Ошибка ${response.status}`)
+    }
+    return response.json()
+  },
+}

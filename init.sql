@@ -25,6 +25,7 @@ CREATE TABLE client (
     address VARCHAR(500),
     reg_date DATE NOT NULL DEFAULT CURRENT_DATE,
     role VARCHAR(20) NOT NULL DEFAULT 'client',
+    is_blocked BOOLEAN NOT NULL DEFAULT FALSE,
     total_purchases_amount NUMERIC(12, 2) NOT NULL DEFAULT 0.00,
     CONSTRAINT ck_client_role CHECK (role IN ('client', 'manager', 'admin'))
 );
@@ -38,6 +39,7 @@ CREATE TABLE product (
     stock_quantity NUMERIC(12, 2) NOT NULL DEFAULT 0,
     category VARCHAR(100),
     brand VARCHAR(100),
+    photo VARCHAR(500),
     CONSTRAINT ck_product_price_non_negative CHECK (price >= 0),
     CONSTRAINT ck_product_stock_non_negative CHECK (stock_quantity >= 0),
     CONSTRAINT ck_product_unit CHECK (unit IN ('шт', 'кг', 'л'))
@@ -53,7 +55,7 @@ CREATE TABLE orders (
     delivery_address VARCHAR(500),
     delivery_method VARCHAR(50),
     payment_method VARCHAR(50),
-    discount_applied NUMERIC(5, 2) NOT NULL DEFAULT 0.00,
+    discount_applied NUMERIC(12, 2) NOT NULL DEFAULT 0.00,
     CONSTRAINT ck_orders_status CHECK (status IN ('new', 'processing', 'shipped', 'delivered', 'cancelled')),
     CONSTRAINT ck_orders_total_non_negative CHECK (total_amount >= 0)
 );

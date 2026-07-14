@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { productsApi } from '../../api';
+import { productsApi, uploadApi } from '../../api';
 import { useAuth } from '../../context/AuthContext';
 
 const UNIT_OPTIONS = [
@@ -16,6 +16,8 @@ const EMPTY_FORM = {
   stock_quantity: '',
   category: '',
   brand: '',
+  photo: null,
+  photoPreview: null,
 };
 
 function formatPrice(price) {
@@ -126,6 +128,19 @@ export default function AdminProductsPage() {
     }
   };
 
+  const handlePhotoChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Show preview
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      setForm((prev) => ({ ...prev, photoPreview: ev.target.result }));
+    };
+    reader.readAsDataURL(file);
+    setForm((prev) => ({ ...prev, photo: file }));
+  };
+
   const handleSave = async () => {
     const errors = {};
     if (!form.name.trim()) errors.name = 'Название обязательно';
@@ -147,6 +162,13 @@ export default function AdminProductsPage() {
 
     try {
       setSaving(true);
+
+      // Upload photo if selected
+      if (form.photo) {
+        const uploadResult = await uploadApi.upload(form.photo);
+        payload.photo = uploadResult.url;
+      }
+
       if (mode === 'create') {
         const created = await productsApi.create(payload);
         setProducts((prev) => [created, ...prev]);
@@ -613,6 +635,73 @@ export default function AdminProductsPage() {
               style={formInputStyle}
               placeholder="Например: Samsung"
             />
+          </div>
+
+          {/* Photo upload */}
+          <div style={{ gridColumn: '1 / -1' }}>
+            <label style={formLabelStyle}>Фото товара (необязательно)</label>
+            <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+              <label style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 8,
+                padding: '10px 20px',
+                borderRadius: 10,
+                border: '1px solid #E8EDF4',
+                backgroundColor: '#FFFFFF',
+                color: '#1B1F24',
+                fontSize: 14,
+                fontWeight: 600,
+                fontFamily: "'Inter', sans-serif",
+                cursor: 'pointer',
+                transition: 'all 0.15s',
+              }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6C7685" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="17 8 12 3 7 8" />
+                  <line x1="12" y1="3" x2="12" y2="15" />
+                </svg>
+                Выбрать файл
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handlePhotoChange}
+                  style={{ display: 'none' }}
+                />
+              </label>
+              {form.photoPreview && (
+                <div style={{ position: 'relative', width: 80, height: 80, borderRadius: 8, overflow: 'hidden', border: '1px solid #E8EDF4' }}>
+                  <img src={form.photoPreview} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <button
+                    onClick={() => setForm(prev => ({ ...prev, photo: null, photoPreview: null }))}
+                    style={{
+                      position: 'absolute',
+                      top: 2,
+                      right: 2,
+                      width: 20,
+                      height: 20,
+                      borderRadius: '50%',
+                      border: 'none',
+                      backgroundColor: 'rgba(0,0,0,0.5)',
+                      color: '#fff',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: 12,
+                      lineHeight: 1,
+                    }}
+                  >
+                    ✕
+                  </button>
+                </div>
+              )}
+              {!form.photoPreview && (
+                <span style={{ fontSize: 13, color: '#6C7685', fontFamily: "'Inter', sans-serif" }}>
+                  JPG, PNG, WEBP. Если не загрузить — будет заглушка
+                </span>
+              )}
+            </div>
           </div>
 
           {/* Description - full width */}

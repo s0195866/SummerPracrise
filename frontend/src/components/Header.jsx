@@ -65,6 +65,12 @@ export default function Header() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 28, flexShrink: 0, marginLeft: 'auto' }}>
           {isAuthenticated && client ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+              {/* Admin/Manager panel button */}
+              {(client.role === 'admin' || client.role === 'manager') && (
+                <Link to="/admin" style={{ textDecoration: 'none' }}>
+                  <NavAction icon={<AdminIcon />} label="Админка" />
+                </Link>
+              )}
               <Link to="/profile" style={{ textDecoration: 'none' }}>
                 <NavAction icon={<UserIcon />} label={getFirstName(client.full_name)} />
               </Link>
@@ -268,6 +274,15 @@ function CartAction({ count }) {
       </div>
       Корзина
     </button>
+  )
+}
+
+function AdminIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <rect x="3" y="3" width="18" height="18" rx="3" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M9 12l2 2 4-4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   )
 }
 

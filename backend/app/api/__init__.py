@@ -12,6 +12,7 @@ from app.api import (
     products,
     reviews,
     sales,
+    uploads,
 )
 
 ALL_ROUTERS = [
@@ -25,6 +26,7 @@ ALL_ROUTERS = [
     reviews.router,
     sales.router,
     admin.router,
+    uploads.router,
 ]
 
 __all__ = ["ALL_ROUTERS"]

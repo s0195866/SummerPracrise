@@ -25,16 +25,17 @@ async function request(path, config = {}) {
     return undefined
   }
 
+  // Читаем тело ответа как текст, чтобы избежать ошибки "body stream already read"
+  const bodyText = await response.text()
   let data
   try {
-    data = await response.json()
+    data = JSON.parse(bodyText)
   } catch {
-    // Если ответ не JSON — читаем как текст
-    const text = await response.text()
+    // Если ответ не JSON
     if (!response.ok) {
-      throw new Error(text || `Ошибка ${response.status}`)
+      throw new Error(bodyText || `Ошибка ${response.status}`)
     }
-    throw new Error(`Неожиданный ответ сервера: ${text.slice(0, 100)}`)
+    throw new Error(`Неожиданный ответ сервера: ${bodyText.slice(0, 100)}`)
   }
 
   if (!response.ok) {

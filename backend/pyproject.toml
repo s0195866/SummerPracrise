@@ -16,6 +16,7 @@ dependencies = [
     "passlib[bcrypt]>=1.7.4",
     "bcrypt>=4.0,<4.1",
     "psycopg2-binary>=2.9",  # для синхронных скриптов обслуживания
+    "python-multipart>=0.0.9",  # для загрузки файлов
 ]
 
 [project.optional-dependencies]
