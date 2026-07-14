@@ -3,6 +3,51 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { productsApi, cartApi, reviewsApi } from '../api'
 import { useAuth } from '../context/AuthContext'
 
+// map DB product_id -> local photo path based on category position
+const getLocalProductImage = (product) => {
+  const categoryMap = {
+    'Смартфоны': [
+      '/catalog_photo/smartphone/Xiaomi Redmi 15 256 ГБ черный.webp',
+      '/catalog_photo/smartphone/Apple iPhone 15 128 ГБ черный.webp',
+      '/catalog_photo/smartphone/Apple iPhone 17 Pro 256 ГБ серебристый.webp',
+      '/catalog_photo/smartphone/Samsung Galaxy S25 FE 512 ГБ черный.webp',
+      '/catalog_photo/smartphone/Apple iPhone 17 256 ГБ черный.webp',
+    ],
+    'Ноутбуки': [
+      '/catalog_photo/laptop/HUAWEI MateBook D 16 2024 MCLF-X серый.webp',
+      '/catalog_photo/laptop/HONOR MagicBook X16 AMD 2025 серый.webp',
+      '/catalog_photo/laptop/ASUS Vivobook S S3607VA-RP103 серый.webp',
+      '/catalog_photo/laptop/ASUS TUF Gaming FA808UM-S8030 серый.webp',
+      '/catalog_photo/laptop/Apple MacBook Air M4 серебристый.webp',
+    ],
+    'Компьютеры': [
+      '/catalog_photo/pc/ARDOR GAMING NEO M171.webp',
+      '/catalog_photo/pc/ARDOR GAMING NEO M279.webp',
+      '/catalog_photo/pc/ARDOR GAMING NEO M299.webp',
+      '/catalog_photo/pc/ARDOR GAMING NEO M276.webp',
+      '/catalog_photo/pc/ARDOR GAMING NEO M256.webp',
+    ],
+    'Аудио': [
+      '/catalog_photo/audio/Apple EarPods (Type-C) белый 2023.webp',
+      '/catalog_photo/audio/Apple AirPods Pro 3 белый 2025.webp',
+      '/catalog_photo/audio/Apple AirPods 4 ANC белый 2024.webp',
+      '/catalog_photo/audio/Xiaomi Redmi Buds 6 Play черный 2024.webp',
+      '/catalog_photo/audio/Samsung Galaxy Buds 4 Pro черный 2026.webp',
+    ],
+    'Умные часы': [
+      '/catalog_photo/smart-watch/Apple Watch SE 3 40 mm.webp',
+      '/catalog_photo/smart-watch/Xiaomi Smart Band 10.webp',
+      '/catalog_photo/smart-watch/Xiaomi REDMI Watch 5 Active.webp',
+      '/catalog_photo/smart-watch/Apple Watch Series 11 42 mm.webp',
+      '/catalog_photo/smart-watch/Samsung Galaxy Watch8 40 mm LTE.webp',
+    ],
+  }
+  const images = categoryMap[product.category]
+  if (!images) return '/favicon.svg'
+  const idx = (product.product_id - 1) % images.length
+  return images[Math.min(idx, images.length - 1)]
+}
+
 export default function ProductPage() {
   const { id } = useParams()
   const navigate = useNavigate()
@@ -81,6 +126,9 @@ export default function ProductPage() {
     )
   }
 
+  const imageUrl = getLocalProductImage(product)
+  const descriptionLines = product.description ? product.description.split('\n') : []
+
   return (
     <main style={{ maxWidth: 1440, margin: '0 auto', padding: '32px' }}>
       <button onClick={() => navigate(-1)} style={{ background: 'none', border: 'none', color: '#0067B8', cursor: 'pointer', fontSize: 14, marginBottom: 20, fontFamily: 'Inter, sans-serif' }}>
@@ -88,14 +136,24 @@ export default function ProductPage() {
       </button>
 
       <div style={{ display: 'flex', gap: 40, flexWrap: 'wrap' }}>
-        <div style={{ flex: '0 0 400px', height: 400, backgroundColor: '#F5F8FC', borderRadius: 24, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <span style={{ fontSize: 100, color: '#C8D3E4' }}>📦</span>
+        <div style={{ flex: '0 0 400px', height: 400, backgroundColor: '#F5F8FC', borderRadius: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: 24 }}>
+          <img
+            src={imageUrl}
+            alt={product.name}
+            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+          />
         </div>
 
         <div style={{ flex: 1, minWidth: 300 }}>
           <h1 style={{ fontSize: 28, fontWeight: 700, color: '#1B1F24', fontFamily: 'Inter, sans-serif', marginBottom: 12 }}>
             {product.name}
           </h1>
+
+          {product.brand && (
+            <div style={{ fontSize: 14, color: '#6C7685', fontFamily: 'Inter, sans-serif', marginBottom: 8 }}>
+              Бренд: {product.brand}
+            </div>
+          )}
 
           <div style={{ fontSize: 36, fontWeight: 700, color: '#1B1F24', fontFamily: 'Inter, sans-serif', marginBottom: 16 }}>
             {Number(product.price).toLocaleString('ru-RU')} ₽
@@ -109,10 +167,33 @@ export default function ProductPage() {
             В наличии: {Number(product.stock_quantity)} {product.unit}
           </div>
 
-          {product.description && (
-            <p style={{ fontSize: 15, color: '#374151', fontFamily: 'Inter, sans-serif', lineHeight: 1.6, marginBottom: 24 }}>
-              {product.description}
-            </p>
+          {descriptionLines.length > 0 && (
+            <div style={{ marginBottom: 24 }}>
+              <h3 style={{ fontSize: 16, fontWeight: 600, color: '#1B1F24', fontFamily: 'Inter, sans-serif', marginBottom: 8 }}>
+                Характеристики
+              </h3>
+              <div style={{
+                backgroundColor: '#F9FAFB',
+                borderRadius: 12,
+                padding: '16px 20px',
+              }}>
+                {descriptionLines.map((line, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      fontSize: 14,
+                      color: '#374151',
+                      fontFamily: 'Inter, sans-serif',
+                      lineHeight: 1.6,
+                      padding: '6px 0',
+                      borderBottom: i < descriptionLines.length - 1 ? '1px solid #E8EDF4' : 'none',
+                    }}
+                  >
+                    {line}
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
 
           <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginBottom: 16 }}>

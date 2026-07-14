@@ -1,6 +1,7 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-const CATALOG_LINKS = ['Смартфоны', 'Ноутбуки', 'Компьютеры', 'Аксессуары', 'Аудио', 'Умный дом']
+const CATALOG_LINKS = ['Смартфоны', 'Ноутбуки', 'Компьютеры', 'Аудио', 'Умные часы']
 
 export default function Footer() {
   return (
@@ -118,7 +119,7 @@ export default function Footer() {
               </ContactItem>
               <ContactItem icon={<PinIcon />}>
                 <div style={{ fontSize: 14, color: '#1B1F24', fontFamily: 'Inter, sans-serif', lineHeight: 1.4 }}>
-                  г. Москва,<br />ул. Технопарк, 1
+                  г. Краснодар,<br />ул. Ставропольская, 149
                 </div>
               </ContactItem>
             </div>
@@ -148,11 +149,21 @@ export default function Footer() {
   )
 }
 
-function FooterLink({ label }) {
+function FooterLink({ label, to }) {
   const [hovered, setHovered] = useState(false)
+  const navigate = useNavigate()
+  const isCatalogLink = CATALOG_LINKS.includes(label)
+  const href = isCatalogLink ? `/catalog?category=${encodeURIComponent(label)}` : '#'
+
   return (
     <a
-      href="#"
+      href={href}
+      onClick={(e) => {
+        if (isCatalogLink) {
+          e.preventDefault()
+          navigate(href)
+        }
+      }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
@@ -161,6 +172,7 @@ function FooterLink({ label }) {
         textDecoration: 'none',
         fontFamily: 'Inter, sans-serif',
         transition: 'color 0.2s',
+        cursor: 'pointer',
       }}
     >
       {label}

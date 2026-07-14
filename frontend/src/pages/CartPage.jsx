@@ -11,6 +11,7 @@ export default function CartPage() {
   const [orderForm, setOrderForm] = useState({ delivery_address: '', delivery_method: 'Курьер', payment_method: 'Карта' })
   const [ordering, setOrdering] = useState(false)
   const [orderMessage, setOrderMessage] = useState('')
+  const [deletingItems, setDeletingItems] = useState(new Set())
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -42,11 +43,20 @@ export default function CartPage() {
   }
 
   const handleRemoveItem = async (itemId) => {
+    setDeletingItems(prev => new Set(prev).add(itemId))
     try {
-      const data = await cartApi.deleteItem(itemId)
-      setCart(data)
+      await cartApi.deleteItem(itemId)
+      // После удаления принудительно перезагружаем корзину
+      await loadCart()
     } catch (err) {
       console.error(err)
+      await loadCart()
+    } finally {
+      setDeletingItems(prev => {
+        const next = new Set(prev)
+        next.delete(itemId)
+        return next
+      })
     }
   }
 
@@ -57,7 +67,6 @@ export default function CartPage() {
     try {
       await ordersApi.create(orderForm)
       setOrderMessage('Заказ оформлен!')
-      // Очищаем корзину
       loadCart()
     } catch (err) {
       setOrderMessage(err instanceof Error ? err.message : 'Ошибка оформления заказа')
@@ -120,55 +129,63 @@ export default function CartPage() {
       ) : (
         <div style={{ display: 'flex', gap: 32, flexWrap: 'wrap' }}>
           <div style={{ flex: 1, minWidth: 300 }}>
-            {cart.items.map(item => (
-              <div key={item.cart_item_id} style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 16,
-                padding: 16,
-                backgroundColor: '#FFFFFF',
-                border: '1px solid #E8EDF4',
-                borderRadius: 12,
-                marginBottom: 12,
-              }}>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 600, fontSize: 15, color: '#1B1F24', fontFamily: 'Inter, sans-serif', marginBottom: 4 }}>
-                    {item.product_name}
+            {cart.items.map(item => {
+              const isDeleting = deletingItems.has(item.cart_item_id)
+              return (
+                <div key={item.cart_item_id} style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 16,
+                  padding: 16,
+                  backgroundColor: '#FFFFFF',
+                  border: '1px solid #E8EDF4',
+                  borderRadius: 12,
+                  marginBottom: 12,
+                  opacity: isDeleting ? 0.5 : 1,
+                  transition: 'opacity 0.2s',
+                }}>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontWeight: 600, fontSize: 15, color: '#1B1F24', fontFamily: 'Inter, sans-serif', marginBottom: 4 }}>
+                      {item.product_name}
+                    </div>
+                    <div style={{ fontSize: 14, color: '#6C7685', fontFamily: 'Inter, sans-serif' }}>
+                      {Number(item.price).toLocaleString('ru-RU')} ₽ × {Number(item.quantity)} {item.unit}
+                    </div>
+                    <div style={{ fontSize: 16, fontWeight: 700, color: '#0067B8', fontFamily: 'Inter, sans-serif', marginTop: 4 }}>
+                      {(Number(item.price) * Number(item.quantity)).toLocaleString('ru-RU')} ₽
+                    </div>
                   </div>
-                  <div style={{ fontSize: 14, color: '#6C7685', fontFamily: 'Inter, sans-serif' }}>
-                    {Number(item.price).toLocaleString('ru-RU')} ₽ × {Number(item.quantity)} {item.unit}
-                  </div>
-                  <div style={{ fontSize: 16, fontWeight: 700, color: '#0067B8', fontFamily: 'Inter, sans-serif', marginTop: 4 }}>
-                    {(Number(item.price) * Number(item.quantity)).toLocaleString('ru-RU')} ₽
-                  </div>
-                </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <button
+                      onClick={() => handleUpdateQuantity(item.cart_item_id, Math.max(1, Number(item.quantity) - 1))}
+                      disabled={isDeleting}
+                      style={{ width: 32, height: 32, borderRadius: 8, border: '1px solid #D4DCE8', background: '#fff', cursor: 'pointer', fontSize: 16 }}
+                    >
+                      −
+                    </button>
+                    <span style={{ fontSize: 16, fontWeight: 600, fontFamily: 'Inter, sans-serif', minWidth: 24, textAlign: 'center' }}>
+                      {Number(item.quantity)}
+                    </span>
+                    <button
+                      onClick={() => handleUpdateQuantity(item.cart_item_id, Number(item.quantity) + 1)}
+                      disabled={isDeleting}
+                      style={{ width: 32, height: 32, borderRadius: 8, border: '1px solid #D4DCE8', background: '#fff', cursor: 'pointer', fontSize: 16 }}
+                    >
+                      +
+                    </button>
+                  </div>
+
                   <button
-                    onClick={() => handleUpdateQuantity(item.cart_item_id, Math.max(1, Number(item.quantity) - 1))}
-                    style={{ width: 32, height: 32, borderRadius: 8, border: '1px solid #D4DCE8', background: '#fff', cursor: 'pointer', fontSize: 16 }}
+                    onClick={() => handleRemoveItem(item.cart_item_id)}
+                    disabled={isDeleting}
+                    style={{ background: 'none', border: 'none', color: isDeleting ? '#ccc' : '#DC2626', cursor: 'pointer', fontSize: 20, padding: 4 }}
                   >
-                    −
-                  </button>
-                  <span style={{ fontSize: 16, fontWeight: 600, fontFamily: 'Inter, sans-serif', minWidth: 24, textAlign: 'center' }}>
-                    {Number(item.quantity)}
-                  </span>
-                  <button
-                    onClick={() => handleUpdateQuantity(item.cart_item_id, Number(item.quantity) + 1)}
-                    style={{ width: 32, height: 32, borderRadius: 8, border: '1px solid #D4DCE8', background: '#fff', cursor: 'pointer', fontSize: 16 }}
-                  >
-                    +
+                    {isDeleting ? '⏳' : '✕'}
                   </button>
                 </div>
-
-                <button
-                  onClick={() => handleRemoveItem(item.cart_item_id)}
-                  style={{ background: 'none', border: 'none', color: '#DC2626', cursor: 'pointer', fontSize: 20, padding: 4 }}
-                >
-                  ✕
-                </button>
-              </div>
-            ))}
+              )
+            })}
 
             <div style={{ fontSize: 24, fontWeight: 700, color: '#1B1F24', fontFamily: 'Inter, sans-serif', marginTop: 16, textAlign: 'right' }}>
               Итого: {Number(cart.total).toLocaleString('ru-RU')} ₽

@@ -6,9 +6,6 @@
 -- Пароль суперпользователя: 123
 --
 
--- ================================================================
--- 1. Клиент (client)
--- ================================================================
 DROP TABLE IF EXISTS review CASCADE;
 DROP TABLE IF EXISTS cart_item CASCADE;
 DROP TABLE IF EXISTS cart CASCADE;
@@ -129,61 +126,191 @@ VALUES
 
 INSERT INTO product (name, price, unit, description, stock_quantity, category, brand)
 VALUES
-    ('Samsung Galaxy S24 Ultra 256 ГБ', 89990.00, 'шт', 'Флагманский смартфон Samsung с камерой 200 МП, S Pen, 12 ГБ ОЗУ', 15.00, 'Смартфоны', 'Samsung'),
-    ('Apple MacBook Air M3 13" 8/256 ГБ', 119990.00, 'шт', 'Ноутбук Apple с процессором M3, 8 ГБ ОЗУ, SSD 256 ГБ', 10.00, 'Ноутбуки', 'Apple'),
-    ('Sony WH-1000XM5 Беспроводные наушники', 24990.00, 'шт', 'Беспроводные наушники с активным шумоподавлением', 20.00, 'Аудио', 'Sony'),
-    ('Apple Watch Series 9 45 мм GPS', 39990.00, 'шт', 'Умные часы Apple Watch Series 9 с дисплеем 45 мм', 12.00, 'Умные часы', 'Apple'),
-    ('Xiaomi 14T Pro 256 ГБ Titanium', 69990.00, 'шт', 'Флагманский смартфон Xiaomi с камерой Leica', 8.00, 'Смартфоны', 'Xiaomi'),
-    ('ASUS ROG Zephyrus G14 Ryzen 9', 149990.00, 'шт', 'Игровой ноутбук ASUS ROG с Ryzen 9, RTX 4060, 16 ГБ ОЗУ', 5.00, 'Ноутбуки', 'ASUS'),
-    ('Ноутбук Lenovo IdeaPad 15.6"', 50000.00, 'шт', '15.6", 8 ГБ ОЗУ, SSD 512 ГБ', 10.00, 'Ноутбуки', 'Lenovo'),
-    ('Мышь беспроводная Logitech', 1500.00, 'шт', 'Беспроводная, 2 кнопки + колесо', 30.00, 'Компьютеры', 'Logitech'),
-    ('Клавиатура механическая', 3500.00, 'шт', 'Подсветка, USB', 20.00, 'Компьютеры', 'Logitech'),
-    ('Наушники Apple AirPods Pro 2', 18990.00, 'шт', 'Беспроводные наушники Apple с активным шумоподавлением', 25.00, 'Аудио', 'Apple'),
-    ('Смартфон Google Pixel 8 Pro', 79990.00, 'шт', 'Камерофон Google с чипом Tensor G3', 7.00, 'Смартфоны', 'Google'),
-    ('Умные часы Samsung Galaxy Watch 6', 24990.00, 'шт', 'Умные часы Samsung с Wear OS, 44 мм', 14.00, 'Умные часы', 'Samsung');
+    -- Смартфоны (5 шт)
+    ('Xiaomi Redmi 15 256 ГБ черный', 15999.00, 'шт', 'Дисплей: 6.9", 2340x1080, IPS, 144 Гц
+Связь: 3G, 4G, Nano-SIM
+Процессор: Qualcomm Snapdragon 685, 8 x 2.8 ГГц
+Память: 8 ГБ / 256 ГБ
+Камера: 50 Мп', 15.00, 'Смартфоны', 'Xiaomi'),
+    ('Apple iPhone 15 128 ГБ черный', 57999.00, 'шт', 'Дисплей: 6.1", 2556x1179, Super Retina XDR, 60 Гц
+Связь: 3G, 4G, 5G, eSIM, Nano-SIM
+Процессор: Apple A16 Bionic, 6 x 3.46 ГГц
+Память: 6 ГБ / 128 ГБ
+Камера: 48+12 Мп', 10.00, 'Смартфоны', 'Apple'),
+    ('Apple iPhone 17 Pro 256 ГБ серебристый', 124999.00, 'шт', 'Дисплей: 6.3", 2622x1206, Super Retina XDR, 120 Гц
+Связь: 3G, 4G, 5G, eSIM, Nano-SIM
+Процессор: Apple A19 Pro, 6
+Память: 12 ГБ / 256 ГБ
+Камера: 48+48+48 Мп', 5.00, 'Смартфоны', 'Apple'),
+    ('Samsung Galaxy S25 FE 512 ГБ черный', 53999.00, 'шт', 'Дисплей: 6.7", 2340x1080, Dynamic AMOLED 2X, 120 Гц
+Связь: 3G, 4G, 5G, eSIM, Nano-SIM
+Процессор: Samsung Exynos 2400, 10 x 3.2 ГГц
+Память: 8 ГБ / 512 ГБ
+Камера: 50+8+12 Мп', 8.00, 'Смартфоны', 'Samsung'),
+    ('Apple iPhone 17 256 ГБ черный', 84499.00, 'шт', 'Дисплей: 6.3", 2622x1206, Super Retina XDR, 120 Гц
+Связь: 3G, 4G, 5G, eSIM, Nano-SIM
+Процессор: Apple A19, 6
+Память: 8 ГБ / 256 ГБ
+Камера: 48+48 Мп', 7.00, 'Смартфоны', 'Apple'),
+    -- Ноутбуки (5 шт)
+    ('HUAWEI MateBook D 16 2024 MCLF-X серый', 58999.00, 'шт', 'Процессор: Intel Core i5-12450H (4 + 4 x 2 ГГц + 1.5 ГГц)
+Память: ОЗУ/16 ГБ, SSD/512 ГБ
+ОС: без ОС
+Экран: 16" (1920x1200)
+Вес: 1.72 кг', 10.00, 'Ноутбуки', 'HUAWEI'),
+    ('HONOR MagicBook X16 AMD 2025 серый', 51999.00, 'шт', 'Процессор: AMD Ryzen 5 6600H (6 x 3.3 ГГц)
+Память: ОЗУ/16 ГБ, SSD/512 ГБ
+ОС: без ОС
+Экран: 16" (1920x1200)
+Вес: 1.74 кг', 8.00, 'Ноутбуки', 'HONOR'),
+    ('ASUS Vivobook S S3607VA-RP103 серый', 59999.00, 'шт', 'Процессор: Intel Core 5 210H (4 + 4 x 2.2 ГГц + 1.6 ГГц)
+Память: ОЗУ/16 ГБ, SSD/512 ГБ
+ОС: без ОС
+Экран: 16" (1920x1200)
+Вес: 1.8 кг', 6.00, 'Ноутбуки', 'ASUS'),
+    ('ASUS TUF Gaming FA808UM-S8030 серый', 123999.00, 'шт', 'Процессор: AMD Ryzen 7 260 (8 x 3.8 ГГц)
+Память: ОЗУ/16 ГБ, SSD/512 ГБ
+Видеокарта: GeForce RTX 5060 для ноутбуков / 8 ГБ
+ОС: без ОС
+Экран: 18" (1920x1200)
+Вес: 2.6 кг', 4.00, 'Ноутбуки', 'ASUS'),
+    ('Apple MacBook Air M4 серебристый', 105999.00, 'шт', 'Процессор: Apple M4 10-core (4 + 6)
+Память: ОЗУ/16 ГБ, SSD/256 ГБ
+ОС: macOS
+Экран: 13.6" (2560x1664)
+Вес: 1.24 кг
+Раскладка: английская/русская', 7.00, 'Ноутбуки', 'Apple'),
+    -- Компьютеры (5 шт)
+    ('ARDOR GAMING NEO M171', 80299.00, 'шт', 'Процессор: Intel Core i5-12400F, 6 x 2.5 ГГц - 4.4 ГГц
+ОЗУ: 16 ГБ, DDR4
+SSD: 1 TB M.2 PCIe
+Видеокарта: GeForce RTX 3050 8 ГБ
+Чипсет: Intel H610
+Мощность БП: 500 Вт', 5.00, 'Компьютеры', 'ARDOR GAMING'),
+    ('ARDOR GAMING NEO M279', 91299.00, 'шт', 'Процессор: AMD Ryzen 5 8400F, 6 x 4.2 ГГц - 4.7 ГГц
+ОЗУ: 16 ГБ, DDR5
+SSD: 1 TB M.2 PCIe
+Видеокарта: GeForce RTX 5050 8 ГБ
+Чипсет: AMD A620
+Мощность БП: 500 Вт', 4.00, 'Компьютеры', 'ARDOR GAMING'),
+    ('ARDOR GAMING NEO M299', 62999.00, 'шт', 'Процессор: AMD Ryzen 5 5500, 6 x 3.6 ГГц - 4.2 ГГц
+ОЗУ: 16 ГБ, DDR4
+SSD: 480 GB 2.5" SATA
+Видеокарта: GeForce RTX 3050 6 ГБ
+Чипсет: AMD A520
+Мощность БП: 500 Вт', 6.00, 'Компьютеры', 'ARDOR GAMING'),
+    ('ARDOR GAMING NEO M276', 89799.00, 'шт', 'Процессор: Intel Core i5-12400F, 6 x 2.5 ГГц - 4.4 ГГц
+ОЗУ: 16 ГБ, DDR4
+SSD: 1 TB M.2 PCIe
+Видеокарта: GeForce RTX 5060 8 ГБ
+Чипсет: Intel H610
+Мощность БП: 600 Вт', 3.00, 'Компьютеры', 'ARDOR GAMING'),
+    ('ARDOR GAMING NEO M256', 100999.00, 'шт', 'Процессор: AMD Ryzen 5 7500F, 6 x 3.7 ГГц - 5 ГГц
+ОЗУ: 16 ГБ, DDR5
+SSD: 1 TB M.2 PCIe
+Видеокарта: GeForce RTX 5060 8 ГБ
+Чипсет: AMD B650
+Мощность БП: 500 Вт', 3.00, 'Компьютеры', 'ARDOR GAMING'),
+    -- Аудио (5 шт)
+    ('Apple EarPods (Type-C) белый 2023', 2799.00, 'шт', 'Тип: вкладыши
+Тип соединения: проводной, кабель 1.2 м
+Диапазон частот: 20 Гц - 20000 Гц
+Сопротивление: 16Ом', 30.00, 'Аудио', 'Apple'),
+    ('Apple AirPods Pro 3 белый 2025', 23999.00, 'шт', 'Тип: внутриканальные
+Тип соединения: Bluetooth 5.3
+Активное шумоподавление: есть
+Время работы: до 10 ч
+Степень защиты: IP57', 12.00, 'Аудио', 'Apple'),
+    ('Apple AirPods 4 ANC белый 2024', 17999.00, 'шт', 'Тип: вкладыши
+Тип соединения: Bluetooth 5.3
+Активное шумоподавление: есть
+Время работы: до 5 ч
+Степень защиты: IP54
+Беспроводная зарядка: есть', 15.00, 'Аудио', 'Apple'),
+    ('Xiaomi Redmi Buds 6 Play черный 2024', 999.00, 'шт', 'Тип: внутриканальные
+Тип соединения: Bluetooth 5.4
+Время работы: до 7.5 ч
+Степень защиты: IPX4
+Диапазон частот: 20 Гц - 20000 Гц
+Сопротивление: 16Ом', 25.00, 'Аудио', 'Xiaomi'),
+    ('Samsung Galaxy Buds 4 Pro черный 2026', 15399.00, 'шт', 'Тип: внутриканальные
+Тип соединения: Bluetooth 6.1
+Активное шумоподавление: есть
+Время работы: до 7 ч
+Степень защиты: IP57
+Диапазон частот: 20 Гц - 20000 Гц', 10.00, 'Аудио', 'Samsung'),
+    -- Умные часы (5 шт)
+    ('Apple Watch SE 3 40 mm', 24699.00, 'шт', 'Экран: 1.57" OLED, 394x324
+Измерения: сон, пульс, стресс
+Время работы: 32 ч
+Связь: Bluetooth, NFC, Wi-Fi
+Навигация: GPS', 8.00, 'Умные часы', 'Apple'),
+    ('Xiaomi Smart Band 10', 3599.00, 'шт', 'Экран: 1.72" AMOLED, 520x212
+Измерения: шаги, сон, пульс
+Степень защиты: IP68
+Время работы: 504 ч
+Связь: Bluetooth', 20.00, 'Умные часы', 'Xiaomi'),
+    ('Xiaomi REDMI Watch 5 Active', 2999.00, 'шт', 'Экран: 2" IPS, 385x320
+Измерения: шаги, калории, сон, пульс
+Степень защиты: IPX8
+Время работы: 432 ч
+Связь: Bluetooth', 15.00, 'Умные часы', 'Xiaomi'),
+    ('Apple Watch Series 11 42 mm', 34799.00, 'шт', 'Экран: 1.77" OLED, 374x446
+Измерения: сон, пульс, кислород, стресс
+Время работы: 38 ч
+Связь: Bluetooth, NFC, Wi-Fi
+Навигация: GPS', 6.00, 'Умные часы', 'Apple'),
+    ('Samsung Galaxy Watch8 40 mm LTE', 22399.00, 'шт', 'Экран: 1.34" Super AMOLED, 438x438
+Измерения: давление, шаги, сон
+Степень защиты: IP68
+Связь: Bluetooth, NFC, Wi-Fi
+Навигация: GPS', 7.00, 'Умные часы', 'Samsung');
+
+-- Заказы
+INSERT INTO orders (client_id, total_amount, status, delivery_address, delivery_method, payment_method, discount_applied)
+VALUES (3, 15999.00, 'delivered', 'г. Москва, ул. Пушкина, 10', 'Курьер', 'Карта', 999.99);
 
 INSERT INTO orders (client_id, total_amount, status, delivery_address, delivery_method, payment_method, discount_applied)
-VALUES (3, 49000.00, 'delivered', 'г. Москва, ул. Пушкина, 10', 'Курьер', 'Карта', 999.99);
+VALUES (4, 2799.00, 'shipped', 'г. Санкт-Петербург, Невский пр., 25', 'Самовывоз', 'Наличные', 0.00);
 
-INSERT INTO orders (client_id, total_amount, status, delivery_address, delivery_method, payment_method, discount_applied)
-VALUES (4, 3850.00, 'shipped', 'г. Санкт-Петербург, Невский пр., 25', 'Самовывоз', 'Наличные', 0.00);
+-- Состав заказов
+INSERT INTO order_item (order_id, product_id, quantity, price_at_sale)
+VALUES (1, 1, 1.00, 15999.00);
 
 INSERT INTO order_item (order_id, product_id, quantity, price_at_sale)
-VALUES (1, 7, 1.00, 50000.00);
+VALUES (2, 16, 1.00, 2799.00);
 
-INSERT INTO order_item (order_id, product_id, quantity, price_at_sale)
-VALUES (2, 8, 2.00, 1500.00);
-
-INSERT INTO order_item (order_id, product_id, quantity, price_at_sale)
-VALUES (2, 7, 1.00, 50000.00);
-
+-- Доставки
 INSERT INTO delivery (order_id, address, delivery_method, status)
 VALUES (1, 'г. Москва, ул. Пушкина, 10', 'Курьер', 'delivered');
 
 INSERT INTO delivery (order_id, address, delivery_method, status)
 VALUES (2, 'г. Санкт-Петербург, Невский пр., 25', 'Самовывоз', 'shipped');
 
+-- Оплаты
 INSERT INTO payment (order_id, payment_method, payment_amount, status)
-VALUES (1, 'Карта', 49000.00, 'paid');
+VALUES (1, 'Карта', 15999.00, 'paid');
 
 INSERT INTO payment (order_id, payment_method, payment_amount, status)
-VALUES (2, 'Наличные', 3850.00, 'pending');
+VALUES (2, 'Наличные', 2799.00, 'pending');
+
+-- Отзывы
+INSERT INTO review (product_id, client_id, rating, review_text)
+VALUES (1, 3, 5, 'Отличный смартфон за свои деньги!');
 
 INSERT INTO review (product_id, client_id, rating, review_text)
-VALUES (1, 3, 5, 'Отличный смартфон, камера впечатляет!');
+VALUES (6, 3, 4, 'Хороший ноутбук для работы.');
 
 INSERT INTO review (product_id, client_id, rating, review_text)
-VALUES (2, 3, 5, 'MacBook Air M3 - лучший выбор для работы и учёбы.');
+VALUES (16, 4, 5, 'Классические наушники, отличный звук.');
 
 INSERT INTO review (product_id, client_id, rating, review_text)
-VALUES (3, 4, 4, 'Отличное шумоподавление, удобные амбушюры.');
+VALUES (11, 3, 5, 'Мощный ПК для игр!');
 
 INSERT INTO review (product_id, client_id, rating, review_text)
-VALUES (7, 3, 5, 'Отличный ноутбук, пользуюсь полгода - нареканий нет.');
+VALUES (21, 4, 4, 'Хорошие часы за свою цену.');
 
-INSERT INTO review (product_id, client_id, rating, review_text)
-VALUES (8, 4, 4, 'Удобная мышь, но немного тяжёлая.');
-
+-- Пустые корзины
 INSERT INTO cart (client_id) VALUES (3);
 INSERT INTO cart (client_id) VALUES (4);
 

@@ -25,14 +25,19 @@ export default function RegisterPage() {
     setError('')
     setLoading(true)
     try {
-      const res = await authApi.register({
+      await authApi.register({
         full_name: form.full_name,
         phone: form.phone,
         email: form.email,
         password: form.password,
         address: form.address || null,
       })
-      login(res.access_token)
+      // Автоматический вход после регистрации
+      const loginRes = await authApi.login({
+        email: form.email,
+        password: form.password,
+      })
+      login(loginRes.access_token)
       navigate('/')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Ошибка регистрации')
