@@ -25,9 +25,23 @@ async function request(path, config = {}) {
     return undefined
   }
 
-  const data = await response.json()
+  let data
+  try {
+    data = await response.json()
+  } catch {
+    // Если ответ не JSON — читаем как текст
+    const text = await response.text()
+    if (!response.ok) {
+      throw new Error(text || `Ошибка ${response.status}`)
+    }
+    throw new Error(`Неожиданный ответ сервера: ${text.slice(0, 100)}`)
+  }
 
   if (!response.ok) {
+    // Pydantic 422 возвращает detail как массив: [{"loc":..., "msg":"...", "type":"..."}]
+    if (Array.isArray(data.detail)) {
+      throw new Error(data.detail.map(e => e.msg).join('; '))
+    }
     const message = data.detail || data.message || `Ошибка ${response.status}`
     throw new Error(message)
   }

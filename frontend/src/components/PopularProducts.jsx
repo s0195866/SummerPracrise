@@ -4,63 +4,63 @@ import { useNavigate } from 'react-router-dom'
 const PRODUCTS = [
   {
     id: 1,
-    name: 'Samsung Galaxy S24 Ultra 256 ГБ',
-    price: 89990,
-    oldPrice: 109990,
-    badge: '-18%',
+    name: 'Xiaomi Redmi 15 256 ГБ черный',
+    price: 15999,
+    oldPrice: 18999,
+    badge: '-16%',
     badgeColor: '#E8453C',
-    image: 'https://images.unsplash.com/photo-1610945264803-c22b62d2a7b3?w=400&h=400&fit=crop&auto=format',
-    alt: 'Samsung Galaxy S24 Ultra',
+    image: '/catalog_photo/smartphone/Xiaomi Redmi 15 256 ГБ черный.webp',
+    alt: 'Xiaomi Redmi 15',
   },
   {
     id: 2,
-    name: 'Apple MacBook Air M3 13" 8/256 ГБ',
-    price: 119990,
+    name: 'Apple iPhone 15 128 ГБ черный',
+    price: 57999,
     oldPrice: null,
     badge: 'Новинка',
     badgeColor: '#0067B8',
-    image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=400&fit=crop&auto=format',
-    alt: 'Apple MacBook Air M3',
+    image: '/catalog_photo/smartphone/Apple iPhone 15 128 ГБ черный.webp',
+    alt: 'Apple iPhone 15',
   },
   {
     id: 3,
-    name: 'Sony WH-1000XM5 Беспроводные наушники',
-    price: 24990,
-    oldPrice: 34990,
+    name: 'Apple MacBook Air M4 серебристый',
+    price: 105999,
+    oldPrice: null,
     badge: 'Хит',
     badgeColor: '#F57C00',
-    image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop&auto=format',
-    alt: 'Sony WH-1000XM5',
+    image: '/catalog_photo/laptop/Apple MacBook Air M4 серебристый.webp',
+    alt: 'Apple MacBook Air M4',
   },
   {
     id: 4,
-    name: 'Apple Watch Series 9 45 мм GPS',
-    price: 39990,
-    oldPrice: null,
-    badge: 'Новинка',
-    badgeColor: '#0067B8',
-    image: 'https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?w=400&h=400&fit=crop&auto=format',
-    alt: 'Apple Watch Series 9',
+    name: 'Apple AirPods Pro 3 белый 2025',
+    price: 23999,
+    oldPrice: 27999,
+    badge: '-14%',
+    badgeColor: '#E8453C',
+    image: '/catalog_photo/audio/Apple AirPods Pro 3 белый 2025.webp',
+    alt: 'Apple AirPods Pro 3',
   },
   {
     id: 5,
-    name: 'Xiaomi 14T Pro 256 ГБ Titanium',
-    price: 69990,
-    oldPrice: 79990,
-    badge: '-13%',
-    badgeColor: '#E8453C',
-    image: 'https://images.unsplash.com/photo-1574944985070-8f3ebc6b79d2?w=400&h=400&fit=crop&auto=format',
-    alt: 'Xiaomi 14T Pro',
+    name: 'ARDOR GAMING NEO M256',
+    price: 100999,
+    oldPrice: null,
+    badge: 'Хит',
+    badgeColor: '#F57C00',
+    image: '/catalog_photo/pc/ARDOR GAMING NEO M256.webp',
+    alt: 'ARDOR GAMING NEO M256',
   },
   {
     id: 6,
-    name: 'ASUS ROG Zephyrus G14 Ryzen 9',
-    price: 149990,
-    oldPrice: 169990,
-    badge: 'Хит',
-    badgeColor: '#F57C00',
-    image: 'https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=400&h=400&fit=crop&auto=format',
-    alt: 'ASUS ROG Zephyrus G14',
+    name: 'Apple Watch Series 11 42 mm',
+    price: 34799,
+    oldPrice: 39999,
+    badge: '-13%',
+    badgeColor: '#E8453C',
+    image: '/catalog_photo/smart-watch/Apple Watch Series 11 42 mm.webp',
+    alt: 'Apple Watch Series 11',
   },
 ]
 
@@ -108,7 +108,6 @@ export default function PopularProducts() {
         </div>
       </div>
 
-      {/* Dots */}
       <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 20 }}>
         {Array.from({ length: PRODUCTS.length - visible + 1 }).map((_, i) => (
           <button
@@ -221,15 +220,14 @@ function ProductCard({ product }) {
         flexShrink: 0,
       }}
     >
-      {/* Image area */}
-      <div style={{ height: 200, backgroundColor: '#F5F8FC', position: 'relative', overflow: 'hidden' }}>
+      <div style={{ height: 180, backgroundColor: '#F5F8FC', position: 'relative', overflow: 'hidden', padding: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <img
           src={product.image}
           alt={product.alt}
           style={{
             width: '100%',
             height: '100%',
-            objectFit: 'cover',
+            objectFit: 'contain',
             transform: hovered ? 'scale(1.03)' : 'scale(1)',
             transition: 'transform 0.3s ease',
           }}
@@ -254,7 +252,6 @@ function ProductCard({ product }) {
         )}
       </div>
 
-      {/* Info */}
       <div style={{ padding: '14px 16px 16px' }}>
         <div
           style={{

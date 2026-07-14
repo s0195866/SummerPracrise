@@ -1,19 +1,16 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-const CATEGORIES = [
-  'Смартфоны',
-  'Ноутбуки',
-  'Планшеты',
-  'Компьютеры',
-  'Аксессуары',
-  'Аудио',
-  'Умный дом',
-  'Акции',
-  'Бренды',
-]
+const CATEGORIES = ['Смартфоны', 'Ноутбуки', 'Компьютеры', 'Аудио', 'Умные часы']
 
 export default function CategoryMenu() {
-  const [active, setActive] = useState('Смартфоны')
+  const [active, setActive] = useState(null)
+  const navigate = useNavigate()
+
+  const handleClick = (cat) => {
+    setActive(cat)
+    navigate(`/catalog?category=${encodeURIComponent(cat)}`)
+  }
 
   return (
     <nav
@@ -40,7 +37,7 @@ export default function CategoryMenu() {
             key={cat}
             label={cat}
             active={active === cat}
-            onClick={() => setActive(cat)}
+            onClick={() => handleClick(cat)}
           />
         ))}
       </div>

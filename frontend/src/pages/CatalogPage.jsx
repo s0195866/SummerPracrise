@@ -122,10 +122,56 @@ export default function CatalogPage() {
   )
 }
 
+// map DB product_id -> local photo path based on category position
+const getLocalProductImage = (product) => {
+  const categoryMap = {
+    'Смартфоны': [
+      '/catalog_photo/smartphone/Xiaomi Redmi 15 256 ГБ черный.webp',
+      '/catalog_photo/smartphone/Apple iPhone 15 128 ГБ черный.webp',
+      '/catalog_photo/smartphone/Apple iPhone 17 Pro 256 ГБ серебристый.webp',
+      '/catalog_photo/smartphone/Samsung Galaxy S25 FE 512 ГБ черный.webp',
+      '/catalog_photo/smartphone/Apple iPhone 17 256 ГБ черный.webp',
+    ],
+    'Ноутбуки': [
+      '/catalog_photo/laptop/HUAWEI MateBook D 16 2024 MCLF-X серый.webp',
+      '/catalog_photo/laptop/HONOR MagicBook X16 AMD 2025 серый.webp',
+      '/catalog_photo/laptop/ASUS Vivobook S S3607VA-RP103 серый.webp',
+      '/catalog_photo/laptop/ASUS TUF Gaming FA808UM-S8030 серый.webp',
+      '/catalog_photo/laptop/Apple MacBook Air M4 серебристый.webp',
+    ],
+    'Компьютеры': [
+      '/catalog_photo/pc/ARDOR GAMING NEO M171.webp',
+      '/catalog_photo/pc/ARDOR GAMING NEO M279.webp',
+      '/catalog_photo/pc/ARDOR GAMING NEO M299.webp',
+      '/catalog_photo/pc/ARDOR GAMING NEO M276.webp',
+      '/catalog_photo/pc/ARDOR GAMING NEO M256.webp',
+    ],
+    'Аудио': [
+      '/catalog_photo/audio/Apple EarPods (Type-C) белый 2023.webp',
+      '/catalog_photo/audio/Apple AirPods Pro 3 белый 2025.webp',
+      '/catalog_photo/audio/Apple AirPods 4 ANC белый 2024.webp',
+      '/catalog_photo/audio/Xiaomi Redmi Buds 6 Play черный 2024.webp',
+      '/catalog_photo/audio/Samsung Galaxy Buds 4 Pro черный 2026.webp',
+    ],
+    'Умные часы': [
+      '/catalog_photo/smart-watch/Apple Watch SE 3 40 mm.webp',
+      '/catalog_photo/smart-watch/Xiaomi Smart Band 10.webp',
+      '/catalog_photo/smart-watch/Xiaomi REDMI Watch 5 Active.webp',
+      '/catalog_photo/smart-watch/Apple Watch Series 11 42 mm.webp',
+      '/catalog_photo/smart-watch/Samsung Galaxy Watch8 40 mm LTE.webp',
+    ],
+  }
+  const images = categoryMap[product.category]
+  if (!images) return '/favicon.svg'
+  const idx = images.length > 0 ? (product.product_id - 1) % images.length : 0
+  return images[Math.min(idx, images.length - 1)]
+}
+
 function ProductCard({ product }) {
   const [hovered, setHovered] = useState(false)
   const [cartHovered, setCartHovered] = useState(false)
   const [adding, setAdding] = useState(false)
+  const [added, setAdded] = useState(false)
   const navigate = useNavigate()
   const { isAuthenticated } = useAuth()
 
@@ -139,6 +185,8 @@ function ProductCard({ product }) {
     setAdding(true)
     try {
       await cartApi.addItem({ product_id: product.product_id, quantity: 1 })
+      setAdded(true)
+      setTimeout(() => setAdded(false), 2000)
     } catch (err) {
       console.error(err)
     } finally {
@@ -146,22 +194,7 @@ function ProductCard({ product }) {
     }
   }
 
-  const productImages = {
-    1: 'https://images.unsplash.com/photo-1610945264803-c22b62d2a7b3?w=400&h=400&fit=crop&auto=format',
-    2: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=400&fit=crop&auto=format',
-    3: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop&auto=format',
-    4: 'https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?w=400&h=400&fit=crop&auto=format',
-    5: 'https://images.unsplash.com/photo-1574944985070-8f3ebc6b79d2?w=400&h=400&fit=crop&auto=format',
-    6: 'https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=400&h=400&fit=crop&auto=format',
-    7: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&h=400&fit=crop&auto=format',
-    8: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400&h=400&fit=crop&auto=format',
-    9: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=400&h=400&fit=crop&auto=format',
-    10: 'https://images.unsplash.com/photo-1603351154351-5e2d0600bb77?w=400&h=400&fit=crop&auto=format',
-    11: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400&h=400&fit=crop&auto=format',
-    12: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop&auto=format',
-  }
-
-  const imageUrl = productImages[product.product_id] || 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=400&fit=crop&auto=format'
+  const imageUrl = getLocalProductImage(product)
 
   return (
     <div
@@ -181,20 +214,20 @@ function ProductCard({ product }) {
         position: 'relative',
       }}
     >
-      <div style={{ height: 200, backgroundColor: '#F5F8FC', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+      <div style={{ height: 180, backgroundColor: '#F5F8FC', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: 8 }}>
         <img
           src={imageUrl}
           alt={product.name}
           style={{
             width: '100%',
             height: '100%',
-            objectFit: 'cover',
+            objectFit: 'contain',
             transform: hovered ? 'scale(1.03)' : 'scale(1)',
             transition: 'transform 0.3s ease',
           }}
         />
       </div>
-      <div style={{ padding: '14px 16px 16px' }}>
+      <div style={{ padding: '12px 14px 14px' }}>
         <div style={{
           fontSize: 14,
           fontWeight: 500,
@@ -223,14 +256,14 @@ function ProductCard({ product }) {
             onMouseEnter={() => setCartHovered(true)}
             onMouseLeave={() => setCartHovered(false)}
             onClick={handleAddToCart}
-            disabled={adding}
+            disabled={adding || added}
             style={{
               width: 40,
               height: 40,
               borderRadius: 10,
-              border: `1.5px solid ${cartHovered ? '#0067B8' : '#E8EDF4'}`,
-              backgroundColor: cartHovered ? '#0067B8' : '#fff',
-              color: cartHovered ? '#fff' : '#0067B8',
+              border: `1.5px solid ${added ? '#16A34A' : cartHovered ? '#0067B8' : '#E8EDF4'}`,
+              backgroundColor: added ? '#16A34A' : cartHovered ? '#0067B8' : '#fff',
+              color: added ? '#fff' : cartHovered ? '#fff' : '#0067B8',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
@@ -240,11 +273,17 @@ function ProductCard({ product }) {
               flexShrink: 0,
             }}
           >
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-              <path d="M1 1h2.5l1.6 8h8l2-5.5H4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              <circle cx="7.5" cy="15" r="1.5" fill="currentColor" />
-              <circle cx="13.5" cy="15" r="1.5" fill="currentColor" />
-            </svg>
+            {added ? (
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                <path d="M3 9l4 4 8-8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            ) : (
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                <path d="M1 1h2.5l1.6 8h8l2-5.5H4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <circle cx="7.5" cy="15" r="1.5" fill="currentColor" />
+                <circle cx="13.5" cy="15" r="1.5" fill="currentColor" />
+              </svg>
+            )}
           </button>
         </div>
       </div>
