@@ -6,7 +6,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
-from app.deps import require_admin
+from app.deps import require_roles, require_admin
 from app.models import Client, Product
 from app.schemas import ProductCreate, ProductOut, ProductUpdate
 
@@ -68,10 +68,10 @@ async def create_product(
 async def update_product(
     product_id: int,
     payload: ProductUpdate,
-    _: Client = Depends(require_admin),
+    _: Client = Depends(require_roles("manager", "admin")),
     db: AsyncSession = Depends(get_db),
 ) -> Product:
-    """Редактировать товар (только администратор)."""
+    """Редактировать товар (менеджер и администратор)."""
     result = await db.execute(select(Product).where(Product.product_id == product_id))
     product = result.scalar_one_or_none()
     if product is None:

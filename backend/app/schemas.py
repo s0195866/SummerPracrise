@@ -49,6 +49,7 @@ class ClientOut(BaseModel):
     address: Optional[str] = None
     reg_date: date
     role: str
+    is_blocked: bool = False
     total_purchases_amount: Decimal
     is_regular: bool = False
 

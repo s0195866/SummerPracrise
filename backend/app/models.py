@@ -52,6 +52,7 @@ class Client(Base):
     address: Mapped[Optional[str]] = mapped_column(String(500))
     reg_date: Mapped[date] = mapped_column(Date, server_default=func.current_date())
     role: Mapped[str] = mapped_column(String(20), default="client", nullable=False)
+    is_blocked: Mapped[bool] = mapped_column(default=False, nullable=False)
     total_purchases_amount: Mapped[Decimal] = mapped_column(
         Numeric(12, 2), default=Decimal("0.00"), nullable=False
     )

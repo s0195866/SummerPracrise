@@ -55,6 +55,7 @@ export const ordersApi = {
   },
   getById: (id) => api.get(`/orders/${id}`),
   cancel: (id) => api.put(`/orders/${id}/cancel`),
+  updateStatus: (id, data) => api.put(`/orders/${id}/status`, data),
 }
 
 // ===================== REVIEWS =====================
@@ -66,7 +67,32 @@ export const reviewsApi = {
   delete: (reviewId) => api.delete(`/reviews/${reviewId}`),
 }
 
+// ===================== SALES =====================
+export const salesApi = {
+  list: (params) => {
+    const query = new URLSearchParams()
+    if (params?.limit) query.set('limit', String(params.limit))
+    if (params?.offset) query.set('offset', String(params.offset))
+    const qs = query.toString()
+    return api.get(`/sales${qs ? `?${qs}` : ''}`)
+  },
+}
+
 // ===================== STATISTICS =====================
 export const statsApi = {
   get: () => api.get('/admin/statistics'),
+}
+
+// ===================== ADMIN =====================
+export const adminApi = {
+  listUsers: (params) => {
+    const query = new URLSearchParams()
+    if (params?.limit) query.set('limit', String(params.limit))
+    if (params?.offset) query.set('offset', String(params.offset))
+    const qs = query.toString()
+    return api.get(`/admin/users${qs ? `?${qs}` : ''}`)
+  },
+  changeRole: (userId, role) => api.put(`/admin/users/${userId}/role`, { role }),
+  blockUser: (userId) => api.put(`/admin/users/${userId}/block`),
+  unblockUser: (userId) => api.put(`/admin/users/${userId}/unblock`),
 }

@@ -8,11 +8,50 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
-from app.deps import require_admin
+from app.deps import require_admin, require_manager
 from app.models import Client, Order, Product
 from app.schemas import ChangeRoleRequest, ClientOut, StatisticsOut
 
 router = APIRouter(prefix="/api/admin", tags=["admin"])
+
+
+@router.put("/users/{user_id}/block", response_model=ClientOut)
+async def block_user(
+    user_id: int,
+    current_user: Client = Depends(require_admin),
+    db: AsyncSession = Depends(get_db),
+) -> Client:
+    """Заблокировать пользователя (только администратор)."""
+    if user_id == current_user.client_id:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Нельзя заблокировать самого себя",
+        )
+    result = await db.execute(select(Client).where(Client.client_id == user_id))
+    target = result.scalar_one_or_none()
+    if target is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Пользователь не найден")
+    target.is_blocked = True
+    await db.commit()
+    await db.refresh(target)
+    return target
+
+
+@router.put("/users/{user_id}/unblock", response_model=ClientOut)
+async def unblock_user(
+    user_id: int,
+    current_user: Client = Depends(require_admin),
+    db: AsyncSession = Depends(get_db),
+) -> Client:
+    """Разблокировать пользователя (только администратор)."""
+    result = await db.execute(select(Client).where(Client.client_id == user_id))
+    target = result.scalar_one_or_none()
+    if target is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Пользователь не найден")
+    target.is_blocked = False
+    await db.commit()
+    await db.refresh(target)
+    return target
 
 
 @router.get("/users", response_model=list[ClientOut])
@@ -59,7 +98,7 @@ async def change_user_role(
 
 @router.get("/statistics", response_model=StatisticsOut)
 async def get_statistics(
-    _: Client = Depends(require_admin),
+    _: Client = Depends(require_manager),
     db: AsyncSession = Depends(get_db),
 ) -> StatisticsOut:
     """Сводная статистика по системе (только администратор)."""
