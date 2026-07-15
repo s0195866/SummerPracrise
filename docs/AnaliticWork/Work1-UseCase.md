@@ -159,7 +159,7 @@ ID заказа;
 
 ## **Use-Case Диаграмма**
 
-![Use-Case](Use-Case.jpg)
+![Use-Case](diagrams/use-case.svg)
 
 ## ***Примеры Use Case***
 
