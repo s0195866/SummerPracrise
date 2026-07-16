@@ -99,6 +99,7 @@ cp .env.example .env
 ### 3. Поднять сервисы
 
 ```bash
+docker compose down -v
 docker compose up -d --build
 ```
 
